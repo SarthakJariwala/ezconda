@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "ezconda"
+version = "0.0.1"
+description = "Manage conda environments, write environment files and create conda lock files"
+authors = ["Sarthak Jariwala"]
+readme = "README.md"
+
+[tool.poetry.scripts]
+ezconda = "ezconda.main:app"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+typer = {extras = ["all"], version = "^0.4.0"}
+PyYAML = "^5.4.1"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
