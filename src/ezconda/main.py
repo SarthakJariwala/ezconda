@@ -99,7 +99,7 @@ def install(
 
     with open(file, "r") as f:
         env_specs = yaml.load(f, Loader=yaml.FullLoader)
-        existing_packages = env_specs["dependencies"]
+        existing_packages = env_specs.get("dependencies")
         # check if packages already exists
         if existing_packages:
             for pkg in pkg_name:
