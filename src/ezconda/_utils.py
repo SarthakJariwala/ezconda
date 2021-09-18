@@ -1,5 +1,3 @@
-from conda.gateways.disk import update
-from typer.params import Option
 import yaml
 import typer
 from pathlib import Path
