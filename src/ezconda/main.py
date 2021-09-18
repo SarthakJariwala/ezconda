@@ -14,7 +14,7 @@ from _utils import (
     remove_pkg_from_dependencies,
     update_channels_after_removal,
 )
-from experimental import write_lock_file
+from experimental import write_lock_file, read_lock_file_and_install
 
 
 app = typer.Typer()
@@ -30,12 +30,15 @@ def create(
         None, "--channel", "-c", help="Additional channel to search for packages"
     ),
     file: Optional[Path] = typer.Option(
-        None, "--file", "-f", help="Name of the environment yaml file"
+        None, "--file", "-f", help="Name of the environment yml file"
     ),
     verbose: Optional[bool] = typer.Option(
         False, "--verbose", "-v", help="Display standard output from conda"
     ),
     lock: Optional[bool] = typer.Option(True, help="Write lockfile"),
+    from_lock: Optional[str] = typer.Option(
+        None, "--from-lock", help="Create environment from lock file"
+    )
 ):
     """
     Create new conda environment with a corresponding environment file and 'lock' file.
@@ -43,69 +46,77 @@ def create(
     Environment file contains environment specifications and 'lock' file contains complete
     specifications for reproducible environment builds.
     """
-    # create a yml file to write specs to
-    if file is None:
-        file = Path(f"{name}-env.yml")
-
-    # check if file (and likely environment) already exists
-    if file.is_file():
-        overwrite = typer.confirm(
-            f"""
-            There is an existing {file} file.
-
-            Please note that this likely means you have an existing conda environment with the same name as {name}.
-            
-            Do you want to update the file and environment?
-            
-            Answering "Yes"/"y" will create a new conda environment '{name}' and overwrite '{file}' file.
-            """,
-            abort=True,
-        )
-        typer.secho(f"Updating {name}-env.yml ...", fg=typer.colors.YELLOW)
-
-    env_specs = create_initial_env_specs(name, channel, packages)
-
-    typer.secho(f"Creating new conda environment : {name} ...", fg=typer.colors.YELLOW)
-
-    if packages:
-        typer.secho(f"Resolving packages...\n", fg=typer.colors.YELLOW)
-
-    if not channel:
-        stdout, stderr, exit_code = run_command(
-            Commands.CREATE, "-n", name, *packages, use_exception_handler=True
-        )
+    if from_lock:
+        if Path(from_lock).is_file():
+            read_lock_file_and_install(from_lock, name, verbose)
+        else:
+            typer.secho(f"{from_lock} is not a valid file!", fg=typer.colors.BRIGHT_RED)
+            raise typer.Exit()
     else:
-        stdout, stderr, exit_code = run_command(
-            Commands.CREATE,
-            "-n",
-            name,
-            "--channel",
-            channel,
-            *packages,
-            use_exception_handler=True,
+        # create a yml file to write specs to
+        if file is None:
+            file = Path(f"{name}.yml")
+
+        # check if file (and likely environment) already exists
+        if file.is_file():
+            overwrite = typer.confirm(
+                f"""
+                There is an existing {file} file.
+
+                Please note that this likely means you have an existing conda environment with the same name as {name}.
+                
+                Do you want to update the file and environment?
+                
+                Answering "Yes"/"y" will create a new conda environment '{name}' and overwrite '{file}'.
+                """,
+                abort=True,
+            )
+            typer.secho(f"Overwriting {file} ...", fg=typer.colors.YELLOW)
+
+        env_specs = create_initial_env_specs(name, channel, packages)
+
+        typer.secho(f"Creating new conda environment : {name} ...", fg=typer.colors.YELLOW)
+
+        if packages:
+            typer.secho(f"Resolving packages...\n", fg=typer.colors.YELLOW)
+
+        if not channel:
+            stdout, stderr, exit_code = run_command(
+                Commands.CREATE, "-n", name, *packages, use_exception_handler=True
+            )
+        else:
+            stdout, stderr, exit_code = run_command(
+                Commands.CREATE,
+                "-n",
+                name,
+                "--channel",
+                channel,
+                *packages,
+                use_exception_handler=True,
+            )
+
+        if exit_code != 0:
+            typer.secho(str(stdout + stderr), color=typer.colors.BRIGHT_RED)
+            raise typer.Exit()
+
+        if verbose:
+            typer.echo(stdout)
+
+        typer.secho(
+            f"""Done! You can activate it with :         
+        
+        $ conda activate {name}
+            """,
+            fg=typer.colors.GREEN,
         )
 
-    if exit_code != 0:
-        typer.secho(str(stdout + stderr), color=typer.colors.BRIGHT_RED)
-        raise typer.Exit()
+        typer.secho(f"Writing specifications to {file} ...", fg=typer.colors.GREEN)
+        write_env_file(env_specs, file)
 
-    if verbose:
-        typer.echo(stdout)
+        typer.secho(f"Created {file}!", fg=typer.colors.GREEN)
 
-    typer.secho(
-        f"""Done! You can activate it with :         
-    $ conda activate {name}
-        """,
-        fg=typer.colors.GREEN,
-    )
-
-    typer.secho(f"Writing specifications to {file} ...", fg=typer.colors.GREEN)
-    write_env_file(env_specs, file)
-
-    typer.secho(f"Created {file}!", fg=typer.colors.GREEN)
-
-    if lock:
-        write_lock_file(name)
+        if lock:
+            write_lock_file(name)
 
 
 @app.command()
@@ -128,7 +139,7 @@ def install(
     """
     Install package/s in specified conda environment.
 
-    This command will also update the environment file and lockfile.
+    This command will also update the environment file and lock file.
     """
 
     typer.secho("Validating file, packages, channels...", fg=typer.colors.YELLOW)

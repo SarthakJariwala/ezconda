@@ -31,8 +31,8 @@ def get_validate_file_name(env_name: str, file: Optional[str] = None) -> Optiona
 
     if not file:
         # first look for existing yml file
-        if not Path(f"{env_name}-env.yml").is_file():
-            typer.secho(f"Couldn't locate {env_name}-env.yml", fg=typer.colors.YELLOW)
+        if not Path(f"{env_name}.yml").is_file():
+            typer.secho(f"Couldn't locate {env_name}.yml", fg=typer.colors.YELLOW)
             env_file = typer.prompt("Please provide the environment file to update")
             # check if new file provided is valid
             if Path(env_file).is_file():
@@ -41,7 +41,7 @@ def get_validate_file_name(env_name: str, file: Optional[str] = None) -> Optiona
                 typer.secho(f"Could not locate {env_file}'", fg=typer.colors.BRIGHT_RED)
                 raise typer.Exit()
         else:
-            file = Path(f"{env_name}-env.yml")
+            file = Path(f"{env_name}.yml")
     # validate the file that the user provides
     else:
         if not Path(file).is_file():
