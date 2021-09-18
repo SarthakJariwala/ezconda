@@ -73,7 +73,7 @@ def create(
         stdout, stderr, exit_code = run_command(
             Commands.CREATE, "-n", name, *packages, use_exception_handler=True
         )
-    else:  # FIXME
+    else:
         stdout, stderr, exit_code = run_command(
             Commands.CREATE,
             "-n",
@@ -143,7 +143,7 @@ def install(
         stdout, stderr, exit_code = run_command(
             Commands.INSTALL, "-n", env_name, *pkg_name, use_exception_handler=True
         )
-    else:  # FIXME
+    else:
         stdout, stderr, exit_code = run_command(
             Commands.INSTALL,
             "-n",
