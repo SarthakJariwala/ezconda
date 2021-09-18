@@ -5,6 +5,14 @@ import typer
 from conda.cli.python_api import run_command
 from conda.cli.python_api import Commands
 
+from _utils import (
+    create_initial_env_specs,
+    get_validate_file_name,
+    read_env_file,
+    add_pkg_to_dependencies,
+    write_env_file,
+    add_new_channel_to_env_specs,
+)
 from experimental import write_lock_file
 
 
@@ -29,20 +37,37 @@ def create(
     lock: Optional[bool] = typer.Option(True, help="Write lockfile"),
 ):
     """
-    Create a new conda environment and a corresponding YAML file containing environment details.
+    Create new conda environment with a corresponding environment file and 'lock' file.
+    
+    Environment file contains environment specifications and 'lock' file contains complete
+    specifications for reproducible environment builds.
     """
-    # check if file name exists
-    if file is not None and file.is_file():
-        typer.secho(
-            f"{file} already exists! Please provide a different filename.",
-            fg=typer.colors.BRIGHT_RED,
+    # create a yml file to write specs to
+    if file is None:
+        file = Path(f"{name}-env.yml")
+
+    # check if file (and likely environment) already exists
+    if file.is_file():
+        overwrite = typer.confirm(
+            f"""
+            There is an existing {file} file.
+
+            Please note that this likely means you have an existing conda environment with the same name as {name}.
+            
+            Do you want to update the file and environment?
+            
+            Answering "Yes"/"y" will create a new conda environment '{name}' and overwrite '{file}' file.
+            """,
+            abort=True
         )
-        raise typer.Exit()
+        typer.secho(f"Updating {name}-env.yml ...", fg=typer.colors.YELLOW)
+    
+    env_specs = create_initial_env_specs(name, channel, packages)
 
     typer.secho(f"Creating new conda environment : {name} ...", fg=typer.colors.YELLOW)
 
     if packages:
-        typer.secho(f"Adding packages to the environment...", fg=typer.colors.YELLOW)
+        typer.secho(f"Resolving packages...\n", fg=typer.colors.YELLOW)
 
     if not channel:
         stdout, stderr, exit_code = run_command(
@@ -53,7 +78,7 @@ def create(
             Commands.CREATE,
             "-n",
             name,
-            "-channel",
+            "--channel",
             channel,
             *packages,
             use_exception_handler=True,
@@ -73,29 +98,10 @@ def create(
         fg=typer.colors.GREEN,
     )
 
-    if file is None:
-        file = Path(f"{name}-env.yml")
+    typer.secho(f"Writing specifications to {file} ...", fg=typer.colors.GREEN)
+    write_env_file(env_specs, file)
 
-    typer.secho(f"Writing to {file} ...", fg=typer.colors.GREEN)
-    if file.is_file():
-        overwrite = typer.confirm(
-            "There is an existing file. Do you want to update it?", abort=True
-        )
-        typer.secho(f"Updating {name}-env.yml ...", fg=typer.colors.YELLOW)
-
-    env_specs = {}
-    env_specs.update({"name": name})
-    if channel:
-        env_specs.update({"channels": [channel, "defaults"]})
-    else:
-        env_specs.update({"channels": ["defaults"]})
-    if packages:
-        env_specs.update({"dependencies": packages})
-
-    with open(file, "w") as f:
-        yaml.safe_dump(env_specs, f, sort_keys=False)
-
-    typer.secho(f"Created {name}-env.yml!", fg=typer.colors.GREEN)
+    typer.secho(f"Created {file}!", fg=typer.colors.GREEN)
 
     if lock:
         write_lock_file(name)
@@ -108,7 +114,7 @@ def install(
         ..., "--name", "-n", help="Name of the environment to install package into"
     ),
     file: Optional[str] = typer.Option(
-        None, "--file", "-f", help="env.yml file to update with new packages"
+        None, "--file", "-f", help="'.yml' file to update with new packages"
     ),
     channel: Optional[str] = typer.Option(
         None, "--channel", "-c", help="Additional channel to search for packages"
@@ -118,42 +124,35 @@ def install(
     ),
     lock: Optional[bool] = typer.Option(True, help="Write lockfile"),
 ):
-    """Install conda package"""
+    """
+    Install package/s in specified conda environment.
+    
+    This command will also update the environment file and lockfile.
+    """
 
-    if not file:
-        if not Path(f"{env_name}-env.yml").is_file():
-            typer.secho(f"Couldn't find {env_name}-env.yml", fg=typer.colors.YELLOW)
-            env_file = typer.prompt("Please provide the environment file to update")
-            if Path(env_file).is_file():
-                file = Path(env_file)
-            else:
-                typer.secho(f"Could not locate {env_file}'", fg=typer.colors.BRIGHT_RED)
-                raise typer.Exit()
-        else:
-            file = Path(f"{env_name}-env.yml")
+    typer.secho("Validating file, packages, channels...", fg=typer.colors.YELLOW)
+    file = get_validate_file_name(env_name, file)
 
-    with open(file, "r") as f:
-        env_specs = yaml.load(f, Loader=yaml.FullLoader)
-        existing_packages = env_specs.get("dependencies")
-        # check if packages already exists
-        if existing_packages:
-            for pkg in pkg_name:
-                for ext_pkg in existing_packages:
-                    if pkg in ext_pkg:
-                        typer.secho(
-                            f"{pkg} already exists in {file}. Skipping installation. If you want to update {pkg}, use `update` instead.",
-                            fg=typer.colors.YELLOW,
-                        )
-                        raise typer.Exit()
-
-            env_specs["dependencies"] = existing_packages + list(pkg_name)
-        else:
-            env_specs["dependencies"] = list(pkg_name)
+    env_specs = read_env_file(file)
+    env_specs = add_pkg_to_dependencies(env_specs, pkg_name)
+    env_specs = add_new_channel_to_env_specs(env_specs, channel)
 
     typer.secho("Installing packages...", fg=typer.colors.YELLOW)
-    stdout, stderr, exit_code = run_command(
-        Commands.INSTALL, "-n", env_name, *pkg_name, use_exception_handler=True
-    )
+    
+    if not channel:
+        stdout, stderr, exit_code = run_command(
+            Commands.INSTALL, "-n", env_name, *pkg_name, use_exception_handler=True
+        )
+    else:  # FIXME
+        stdout, stderr, exit_code = run_command(
+            Commands.INSTALL,
+            "-n",
+            env_name,
+            "--channel",
+            channel,
+            *pkg_name,
+            use_exception_handler=True,
+        )
 
     if exit_code != 0:
         typer.secho(str(stdout + stderr), color=typer.colors.BRIGHT_RED)
@@ -162,12 +161,10 @@ def install(
     if verbose:
         typer.echo(stdout)
 
-    typer.secho("Installation complete!", fg=typer.colors.GREEN)
+    typer.secho("Installation complete!\n", fg=typer.colors.GREEN)
+    
     typer.secho(f"Updating {file}...", fg=typer.colors.YELLOW)
-
-    with open(file, "w") as f:
-        yaml.safe_dump(env_specs, f, sort_keys=False)
-
+    write_env_file(env_specs, file)
     typer.secho(f"Updated {file}!", fg=typer.colors.GREEN)
 
     if lock:
@@ -175,11 +172,52 @@ def install(
 
 
 @app.command()
-def remove(name: str = typer.Argument(...)):
+def remove(
+    pkg_name: List[str] = typer.Argument(..., help="Packages to uninstall"),
+    env_name: str = typer.Option(
+        ..., "--name", "-n", help="Name of the environment to uninstall package from"
+    ),
+    file: Optional[str] = typer.Option(
+        None, "--file", "-f", help="'.yml' file to update with removed packages"
+    ),
+    verbose: Optional[bool] = typer.Option(
+        False, "--verbose", "-v", help="Display standard output from conda"
+    ),
+    lock: Optional[bool] = typer.Option(True, help="Write lockfile"),
+):
+    """
+    Remove/uninstall packages from environment.
+
+    This command will also update the environment file and lockfile.
+    """
+
+    typer.secho("Validating file, packages...", fg=typer.colors.YELLOW)
+    file = get_validate_file_name(env_name, file)
+
+    env_specs = read_env_file(file)
+    # env_specs = remove_pkg_from_dependencies(env_specs, pkg_name)
+
+    typer.secho("Removing packages...", fg=typer.colors.YELLOW)
+
     stdout, stderr, exit_code = run_command(
-        Commands.REMOVE, "-n", name, use_exception_handler=True
+        Commands.REMOVE, "-n", env_name, *pkg_name, use_exception_handler=True
     )
-    typer.echo(stdout)
+
+    if exit_code != 0:
+        typer.secho(str(stdout + stderr), color=typer.colors.BRIGHT_RED)
+        raise typer.Exit()
+
+    if verbose:
+        typer.echo(stdout)
+    
+    typer.secho("Removal complete!\n", fg=typer.colors.GREEN)
+    
+    typer.secho(f"Updating {file}...", fg=typer.colors.YELLOW)
+    write_env_file(env_specs, file)
+    typer.secho(f"Updated {file}!", fg=typer.colors.GREEN)
+
+    if lock:
+        write_lock_file(env_name)
 
 
 if __name__ == "__main__":
