@@ -98,6 +98,7 @@ def add_new_channel_to_env_specs(env_specs : Dict, channel : Optional[str]) -> D
     """Add new channel to the environment specifications, if it does not exist."""
     if channel:
         existing_channels = env_specs.get("channels") # this should always return ["defaults"] atleast!
-        if channel not in existing_channels:
-            env_specs.update({"channels" : existing_channels + channel})
+        if existing_channels and channel not in existing_channels:
+            new_channels  = existing_channels + [channel]
+            env_specs["channels"] = new_channels
     return env_specs
