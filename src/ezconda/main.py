@@ -12,6 +12,7 @@ from _utils import (
     add_pkg_to_dependencies,
     write_env_file,
     add_new_channel_to_env_specs,
+    remove_pkg_from_dependencies,
 )
 from experimental import write_lock_file
 
@@ -165,7 +166,7 @@ def install(
     
     typer.secho(f"Updating {file}...", fg=typer.colors.YELLOW)
     write_env_file(env_specs, file)
-    typer.secho(f"Updated {file}!", fg=typer.colors.GREEN)
+    typer.secho(f"Updated {file}!\n", fg=typer.colors.GREEN)
 
     if lock:
         write_lock_file(env_name)
@@ -195,7 +196,7 @@ def remove(
     file = get_validate_file_name(env_name, file)
 
     env_specs = read_env_file(file)
-    # env_specs = remove_pkg_from_dependencies(env_specs, pkg_name)
+    env_specs = remove_pkg_from_dependencies(env_specs, pkg_name)
 
     typer.secho("Removing packages...", fg=typer.colors.YELLOW)
 
@@ -214,7 +215,7 @@ def remove(
     
     typer.secho(f"Updating {file}...", fg=typer.colors.YELLOW)
     write_env_file(env_specs, file)
-    typer.secho(f"Updated {file}!", fg=typer.colors.GREEN)
+    typer.secho(f"Updated {file}!\n", fg=typer.colors.GREEN)
 
     if lock:
         write_lock_file(env_name)

@@ -97,8 +97,36 @@ def add_pkg_to_dependencies(env_specs: Dict, pkg_name: List[str]) -> Dict:
 def add_new_channel_to_env_specs(env_specs : Dict, channel : Optional[str]) -> Dict:
     """Add new channel to the environment specifications, if it does not exist."""
     if channel:
-        existing_channels = env_specs.get("channels") # this should always return ["defaults"] atleast!
+        existing_channels = list(env_specs.get("channels")) # this should always return ["defaults"] atleast!
         if existing_channels and channel not in existing_channels:
-            new_channels  = existing_channels + [channel]
-            env_specs["channels"] = new_channels
+            existing_channels.append(channel)
+            env_specs["channels"] = existing_channels
+    return env_specs
+
+
+def remove_pkg_from_dependencies(env_specs: Dict, pkg_name: List[str]) -> Dict:
+    """
+    Checks if the package/s specified already exist in 'dependencies' section in 'yml' file.
+    If package/s already exists, informs user and exits the program.
+    If package/s does not exist, adds it to 'dependencies' section in 'yml' file.
+    """
+
+    # TODO - check how this handles multiple '>'/'<' dependencies
+    # FOR EXAMPLE - 'numpy>1.1' and 'numpy>1.8' should not lead to two entries in the env.yml file
+    existing_packages = env_specs.get("dependencies")
+    # check if packages already exists
+    if existing_packages:
+        for pkg in pkg_name:
+            if pkg in existing_packages:
+                existing_packages.remove(pkg)
+                env_specs["dependencies"] = existing_packages
+            else:
+                typer.secho(
+                    f"{pkg} is not listed in environment 'yml' file!",
+                    fg=typer.colors.BRIGHT_RED,
+                )
+                raise typer.Exit()
+    else:
+        typer.secho("There are no packages listed in the yml file.", fg=typer.colors.BRIGHT_RED)
+        raise typer.Exit()
     return env_specs
