@@ -1,3 +1,5 @@
+import json
+from conda.cli.python_api import Commands, run_command
 import yaml
 import typer
 from pathlib import Path
@@ -131,4 +133,20 @@ def remove_pkg_from_dependencies(env_specs: Dict, pkg_name: List[str]) -> Dict:
             "There are no packages listed in the yml file.", fg=typer.colors.BRIGHT_RED
         )
         raise typer.Exit()
+    return env_specs
+
+
+def update_channels_after_removal(env_specs : Dict, env_name : str) -> Dict:
+    """
+    Updates channels in the environment specifications by looking at the exisiting channels in the environment.
+    """
+
+    # get list of channels
+    stdout, _, _ = run_command(Commands.LIST, "-n", env_name, "--json")
+
+    # identify unique ones and update channels in env_specs
+    complete_dict : List[Dict] = json.loads(stdout)
+    new_channels = list(set([d["channel"] for d in complete_dict]))
+    new_channels.append("defaults")  # 'defaults' needs to be added back? 
+    env_specs["channels"] = new_channels
     return env_specs

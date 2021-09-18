@@ -12,6 +12,7 @@ from _utils import (
     write_env_file,
     add_new_channel_to_env_specs,
     remove_pkg_from_dependencies,
+    update_channels_after_removal,
 )
 from experimental import write_lock_file
 
@@ -209,6 +210,8 @@ def remove(
 
     if verbose:
         typer.echo(stdout)
+    
+    env_specs = update_channels_after_removal(env_specs, env_name)
 
     typer.secho("Removal complete!\n", fg=typer.colors.GREEN)
 
