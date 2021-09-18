@@ -1,4 +1,3 @@
-import yaml
 from typing import List, Optional
 from pathlib import Path
 import typer
@@ -39,7 +38,7 @@ def create(
 ):
     """
     Create new conda environment with a corresponding environment file and 'lock' file.
-    
+
     Environment file contains environment specifications and 'lock' file contains complete
     specifications for reproducible environment builds.
     """
@@ -59,10 +58,10 @@ def create(
             
             Answering "Yes"/"y" will create a new conda environment '{name}' and overwrite '{file}' file.
             """,
-            abort=True
+            abort=True,
         )
         typer.secho(f"Updating {name}-env.yml ...", fg=typer.colors.YELLOW)
-    
+
     env_specs = create_initial_env_specs(name, channel, packages)
 
     typer.secho(f"Creating new conda environment : {name} ...", fg=typer.colors.YELLOW)
@@ -127,7 +126,7 @@ def install(
 ):
     """
     Install package/s in specified conda environment.
-    
+
     This command will also update the environment file and lockfile.
     """
 
@@ -139,7 +138,7 @@ def install(
     env_specs = add_new_channel_to_env_specs(env_specs, channel)
 
     typer.secho("Installing packages...", fg=typer.colors.YELLOW)
-    
+
     if not channel:
         stdout, stderr, exit_code = run_command(
             Commands.INSTALL, "-n", env_name, *pkg_name, use_exception_handler=True
@@ -163,7 +162,7 @@ def install(
         typer.echo(stdout)
 
     typer.secho("Installation complete!\n", fg=typer.colors.GREEN)
-    
+
     typer.secho(f"Updating {file}...", fg=typer.colors.YELLOW)
     write_env_file(env_specs, file)
     typer.secho(f"Updated {file}!\n", fg=typer.colors.GREEN)
@@ -210,9 +209,9 @@ def remove(
 
     if verbose:
         typer.echo(stdout)
-    
+
     typer.secho("Removal complete!\n", fg=typer.colors.GREEN)
-    
+
     typer.secho(f"Updating {file}...", fg=typer.colors.YELLOW)
     write_env_file(env_specs, file)
     typer.secho(f"Updated {file}!\n", fg=typer.colors.GREEN)

@@ -5,10 +5,8 @@ from typing import Optional, Dict, List
 
 
 def create_initial_env_specs(
-    env_name : str,
-    channel : Optional[str] = None,
-    packages : Optional[List[str]] = None
-):
+    env_name: str, channel: Optional[str] = None, packages: Optional[List[str]] = None
+) -> Dict:
     """Create initial environment specifications that will be written to 'yml' file."""
 
     env_specs = {}
@@ -22,7 +20,7 @@ def create_initial_env_specs(
     return env_specs
 
 
-def get_validate_file_name(env_name : str, file: Optional[str] = None) -> Optional[str]:
+def get_validate_file_name(env_name: str, file: Optional[str] = None) -> Optional[str]:
     """
     Looks for a '.yml' file with the `env_name` specified. If file cannot
     be located, prompt will ask for the file name. If the file provided does
@@ -92,10 +90,14 @@ def add_pkg_to_dependencies(env_specs: Dict, pkg_name: List[str]) -> Dict:
     return env_specs
 
 
-def add_new_channel_to_env_specs(env_specs : Dict, channel : Optional[str]) -> Dict:
+def add_new_channel_to_env_specs(env_specs: Dict, channel: Optional[str]) -> Dict:
     """Add new channel to the environment specifications, if it does not exist."""
+    
+    # this should always return ["defaults"] atleast!
     if channel:
-        existing_channels = list(env_specs.get("channels")) # this should always return ["defaults"] atleast!
+        existing_channels = list(
+            env_specs.get("channels")
+        )
         if existing_channels and channel not in existing_channels:
             existing_channels.append(channel)
             env_specs["channels"] = existing_channels
@@ -125,6 +127,8 @@ def remove_pkg_from_dependencies(env_specs: Dict, pkg_name: List[str]) -> Dict:
                 )
                 raise typer.Exit()
     else:
-        typer.secho("There are no packages listed in the yml file.", fg=typer.colors.BRIGHT_RED)
+        typer.secho(
+            "There are no packages listed in the yml file.", fg=typer.colors.BRIGHT_RED
+        )
         raise typer.Exit()
     return env_specs
