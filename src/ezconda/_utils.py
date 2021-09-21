@@ -94,12 +94,10 @@ def add_pkg_to_dependencies(env_specs: Dict, pkg_name: List[str]) -> Dict:
 
 def add_new_channel_to_env_specs(env_specs: Dict, channel: Optional[str]) -> Dict:
     """Add new channel to the environment specifications, if it does not exist."""
-    
+
     # this should always return ["defaults"] atleast!
     if channel:
-        existing_channels = list(
-            env_specs.get("channels")
-        )
+        existing_channels = list(env_specs.get("channels"))
         if existing_channels and channel not in existing_channels:
             existing_channels.append(channel)
             env_specs["channels"] = existing_channels
@@ -136,7 +134,7 @@ def remove_pkg_from_dependencies(env_specs: Dict, pkg_name: List[str]) -> Dict:
     return env_specs
 
 
-def update_channels_after_removal(env_specs : Dict, env_name : str) -> Dict:
+def update_channels_after_removal(env_specs: Dict, env_name: str) -> Dict:
     """
     Updates channels in the environment specifications by looking at the exisiting channels in the environment.
     """
@@ -145,8 +143,8 @@ def update_channels_after_removal(env_specs : Dict, env_name : str) -> Dict:
     stdout, _, _ = run_command(Commands.LIST, "-n", env_name, "--json")
 
     # identify unique ones and update channels in env_specs
-    complete_dict : List[Dict] = json.loads(stdout)
+    complete_dict: List[Dict] = json.loads(stdout)
     new_channels = list(set([d["channel"] for d in complete_dict]))
-    new_channels.append("defaults")  # 'defaults' needs to be added back? 
+    new_channels.append("defaults")  # 'defaults' needs to be added back?
     env_specs["channels"] = new_channels
     return env_specs
