@@ -12,20 +12,15 @@ jobs:
     runs-on: ubuntu-latest
     
   steps:
-    
-      - name: Check Out Repo 
-        uses: actions/checkout@v2
-        
-      - name: Build and push
-        id: docker_build
-        uses: docker/build-push-action@v2
-        with:
-          context: ./
-          file: ./Dockerfile
-          tags: test-ezconda:latest
-          push: false
-      
-      - uses: addnab/docker-run-action@v3
-        with:
-          image: test-ezconda:latest
-          options: -t -i 
+    - uses: actions/checkout@v2
+    - uses: docker/build-push-action@v2
+      with:
+        context: ./
+        file: ./Dockerfile
+        tags: test-ezconda:latest
+        push: false
+
+    - uses: addnab/docker-run-action@v3
+      with:
+        image: test-ezconda:latest
+        options: -t -i 
