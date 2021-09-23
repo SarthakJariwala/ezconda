@@ -16,7 +16,8 @@ def write_lock_file(env_name) -> None:
     complete_specs = json.loads(stdout)
     # get the platform from specs listed
     platform = list(set([d["platform"] for d in complete_specs]))
-    platform.remove("noarch")
+    if "noarch" in platform:
+        platform.remove("noarch")
 
     # write lock file
     with open(f"{env_name}-{platform[0]}.lock", "w") as f:
