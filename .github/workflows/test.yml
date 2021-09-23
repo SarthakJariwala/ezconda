@@ -7,20 +7,18 @@ on:
     branches: [main]
 
 jobs:
-
-  build:
+  tests:
     runs-on: ubuntu-latest
-    
   steps:
-    - uses: actions/checkout@v2
-    - uses: docker/build-push-action@v2
-      with:
-        context: ./
-        file: ./Dockerfile
-        tags: test-ezconda:latest
-        push: false
+      - uses: actions/checkout@v2
+      - uses: docker/build-push-action@v2
+        with:
+            context: ./
+            file: ./Dockerfile
+            tags: test-ezconda:latest
+            push: false
 
-    - uses: addnab/docker-run-action@v3
-      with:
-        image: test-ezconda:latest
-        options: -t -i 
+      - uses: addnab/docker-run-action@v3
+        with:
+          image: test-ezconda:latest
+          options: -t -i 
