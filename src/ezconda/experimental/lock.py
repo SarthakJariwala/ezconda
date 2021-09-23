@@ -10,7 +10,7 @@ def write_lock_file(env_name) -> None:
     """
     Writes a lock file for the environment specified.
     """
-    typer.secho(f"Writing lock file...", fg=typer.colors.YELLOW)
+    typer.secho(f"Writing lock file... [EXPERIMENTAL]", fg=typer.colors.YELLOW)
     # generate lock file
     stdout, _, _ = run_command(Commands.LIST, "-n", f"{env_name}", "--json")
     complete_specs = json.loads(stdout)
@@ -34,7 +34,7 @@ def read_lock_file_and_install(lock_file: Path, env_name: str, verbose: bool) ->
 
     typer.secho(f"Creating environment {env_name}...", fg=typer.colors.YELLOW)
     _ = run_command(Commands.CREATE, "-n", env_name, use_exception_handler=True)
-    typer.secho(f"Reading lock file...", fg=typer.colors.YELLOW)
+    typer.secho(f"Reading lock file... [EXPERIMENTAL]", fg=typer.colors.YELLOW)
     with open(lock_file, "r") as f:
         complete_spec = json.load(f)
 
