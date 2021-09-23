@@ -19,4 +19,3 @@ jobs:
     - uses: addnab/docker-run-action@v3
       with:
         image: test-ezconda:latest
-        options: -t -i 
