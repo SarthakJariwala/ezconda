@@ -3,11 +3,41 @@ site_url: https://www.sarthakjariwala.com/ezconda
 site_description: Environment and related file management for conda.
 site_author: Sarthak Jariwala
 
+copyright: Copyright &copy; 2021 Sarthak Jariwala
+
 repo_url: https://github.com/SarthakJariwala/ezconda
+repo_name: SarthakJariwala/ezconda
+edit_uri: edit/main/docs/
 
 theme:
   name: material
+  palette:
+    scheme: default
+    primary: black
+    accent: amber
+  icon:
+    repo: fontawesome/brands/github-alt
+  features:
+    - search.suggest
+    - search.highlight
+  font:
+    text: Roboto
+    code: Roboto Mono
+
+plugins:
+  - search
+
+extra:
+  version:
+    provider: mike
 
 nav:
   - Home : "index.md"
   - License : "license.md"
+
+extra:
+  social:
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/JariwalaSarthak
+    - icon: fontawesome/brands/github
+      link: https://github.com/SarthakJariwala
