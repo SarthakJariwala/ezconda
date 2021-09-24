@@ -1,0 +1,10 @@
+version: "3.7"
+
+services:
+  test:
+    image: ezconda-test
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    
+    container_name: ezconda-test
