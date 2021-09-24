@@ -118,7 +118,9 @@ def create(
 
         typer.secho(f"Created {file}!", fg=typer.colors.GREEN)
 
-        if lock and packages:  # only write lock file if packages are mentioned during env creation
+        if (
+            lock and packages
+        ):  # only write lock file if packages are mentioned during env creation
             write_lock_file(name)
 
 

@@ -8,7 +8,7 @@ from ezconda.main import app
 runner = CliRunner()
 
 
-@pytest.mark. usefixtures("clean_up_env_after_test")
+@pytest.mark.usefixtures("clean_up_env_after_test")
 def test_create_without_install(clean_up_env_after_test):
     result = runner.invoke(app, ["create", "-n", "test"])
 
@@ -17,7 +17,7 @@ def test_create_without_install(clean_up_env_after_test):
     assert "Writing specifications to" in result.stdout
 
 
-@pytest.mark. usefixtures("clean_up_env_after_test")
+@pytest.mark.usefixtures("clean_up_env_after_test")
 def test_verbose(clean_up_env_after_test):
     result = runner.invoke(app, ["create", "-n", "test", "-v"])
 
@@ -39,7 +39,6 @@ def test_create_w_pkg_install(clean_up_env_after_test):
         assert "numpy" in env_specs["dependencies"]
 
 
-
 @pytest.mark.usefixtures("clean_up_env_after_test")
 def test_create_w_pkg_install_w_channel(clean_up_env_after_test):
     result = runner.invoke(app, ["create", "-n", "test", "-c", "anaconda", "numpy"])
@@ -51,4 +50,3 @@ def test_create_w_pkg_install_w_channel(clean_up_env_after_test):
         env_specs = yaml.load(f, Loader=yaml.FullLoader)
         assert "numpy" in env_specs["dependencies"]
         assert "anaconda" in env_specs["channels"]
-
