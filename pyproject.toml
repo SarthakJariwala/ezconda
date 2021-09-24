@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ezconda"
-version = "0.0.2"
+version = "0.1.0"
 description = "Manage conda environments, write environment files and create conda lock files"
 authors = ["Sarthak Jariwala"]
 readme = "README.md"
