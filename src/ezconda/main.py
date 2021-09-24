@@ -4,6 +4,7 @@ import typer
 from conda.cli.python_api import run_command
 from conda.cli.python_api import Commands
 
+from . import __version__
 from ._utils import (
     create_initial_env_specs,
     get_validate_file_name,
@@ -234,6 +235,12 @@ def remove(
 
     if lock:
         write_lock_file(env_name)
+
+
+@app.command()
+def version():
+    """Shows the version of 'ezconda' installed"""
+    typer.secho(f"{__version__}", fg=typer.colors.BRIGHT_MAGENTA)
 
 
 if __name__ == "__main__":
