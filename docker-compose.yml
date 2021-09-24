@@ -8,3 +8,11 @@ services:
       dockerfile: Dockerfile
     
     container_name: ezconda-test
+  
+  dev:
+    image: ezconda-dev
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev
+    
+    container_name: ezconda-dev
