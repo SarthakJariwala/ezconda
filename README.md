@@ -12,3 +12,17 @@ ezconda create -n new-env
 ```bash
 ezconda install -n new-env python=3.9 numpy scipy matplotlib
 ```
+
+## Developing EZconda
+
+### Run tests
+
+```bash
+docker-compose up --build test
+```
+
+### Local iterative development
+
+```bash
+docker-compose build dev && docker-compose run dev bash
+```
