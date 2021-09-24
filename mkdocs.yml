@@ -1,4 +1,13 @@
-site_name: My Docs
+site_name: EZconda
+site_url: https://ezconda.sarthakjariwala.com
+site_description: Environment and related file management for conda.
+site_author: Sarthak Jariwala
+
+repo_url: https://github.com/SarthakJariwala/ezconda
 
 theme:
   name: material
+
+nav:
+  - Home : "index.md"
+  - License : "license.md"
