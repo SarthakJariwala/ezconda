@@ -35,9 +35,32 @@ nav:
   - Home : "index.md"
   - License : "license.md"
 
+markdown_extensions:
+  - toc:
+      permalink: true
+  - markdown.extensions.codehilite:
+      uess_lang: true
+  - admonition
+  - codehilite
+  - extra
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_div_format
+  - pymdownx.tabbed
+
 extra:
   social:
     - icon: fontawesome/brands/twitter
       link: https://twitter.com/JariwalaSarthak
     - icon: fontawesome/brands/github
       link: https://github.com/SarthakJariwala
+
+extra_css:
+  - 'css/termynal.css'
+  - 'css/custom.css'
+
+extra_javascript:
+  - 'js/termynal.js'
+  - 'js/custom.js'
