@@ -273,6 +273,7 @@ def remove(
         env_specs = remove_pkg_from_dependencies(env_specs, pkg_name)
 
         status.update("[magenta]Removing packages")
+        time.sleep(1)
 
         stdout, stderr, exit_code = run_command(
             Commands.REMOVE, "-n", env_name, *pkg_name, use_exception_handler=True
