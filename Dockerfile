@@ -1,6 +1,6 @@
 FROM continuumio/miniconda3
 
-RUN conda install pip typer PyYaml pytest pytest-cov
+RUN conda install -c conda-forge pip typer PyYaml pytest pytest-cov rich
 
 COPY . /ezconda
 
