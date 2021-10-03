@@ -242,6 +242,33 @@ def remove(
     with console.status(f"[magenta]Validating file, packages, channels") as status:
         file = get_validate_file_name(env_name, file)
 
+        installed_packages = [
+            specs["name"]
+            for specs in json.load(os.popen(f"conda list -n {env_name} --json"))
+        ]
+        linked_data = conda.exports.linked_data(os.path.expanduser("~/anaconda"))
+
+        other_pkg_that_depends_on_pkg = []
+        for k in linked_data.keys():
+            if linked_data[k]["name"] in installed_packages:
+                # check the dependencies
+                # if the package listed for removal is listed as dependency for any other installed package
+                # let the user know before they confirm to the removal
+                for deps in linked_data[k]["depends"]:
+                    for pkg in pkg_name:  # unpack multiple packages
+                        if pkg in deps.split(" "):
+                            other_pkg_that_depends_on_pkg.append(linked_data[k]["name"])
+
+        if other_pkg_that_depends_on_pkg:
+            console.print(f"[magenta]There are packages that depend on {pkg_name}")
+            console.print(
+                f"[magenta]Removing {pkg_name} will also remove the following:."
+            )
+            console.print(f"[magenta]{other_pkg_that_depends_on_pkg}\n")
+            status.stop()
+            typer.confirm(f"Do you want to continue?", abort=True)
+            status.start()
+
         env_specs = read_env_file(file)
         env_specs = remove_pkg_from_dependencies(env_specs, pkg_name)
 
