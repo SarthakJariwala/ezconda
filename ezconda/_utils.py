@@ -107,8 +107,8 @@ def add_new_channel_to_env_specs(env_specs: Dict, channel: Optional[str]) -> Dic
 def remove_pkg_from_dependencies(env_specs: Dict, pkg_name: List[str]) -> Dict:
     """
     Checks if the package/s specified already exist in 'dependencies' section in 'yml' file.
-    If package/s already exists, informs user and exits the program.
-    If package/s does not exist, adds it to 'dependencies' section in 'yml' file.
+    If package/s does not exist, informs user and exits the program.
+    If package/s exist, remove it from 'dependencies' section in 'yml' file.
     """
 
     # TODO - check how this handles multiple '>'/'<' dependencies
