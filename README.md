@@ -5,7 +5,7 @@ Create and manage your conda environments. Create reproducible environments. No 
 [![Tests](https://github.com/SarthakJariwala/ezconda/workflows/Tests/badge.svg)](https://github.com/SarthakJariwala/ezconda/actions?workflow=Tests)
 [![Codecov](https://codecov.io/gh/SarthakJariwala/ezconda/branch/master/graph/badge.svg)](https://codecov.io/gh/SarthakJariwala/ezconda)
 [![PyPI](https://img.shields.io/pypi/v/ezconda.svg)](https://pypi.org/project/ezconda/)
-[![Documentation Status](https://github.com/SarthakJariwala/ezconda/workflows/Docs/badge.svg)](https://sarthakjariwala.com/ezconda)
+[![Documentation Status](https://github.com/SarthakJariwala/ezconda/workflows/Docs/badge.svg)](https://ezconda.sarthakjariwala.com)
 
 ## Installation
 
