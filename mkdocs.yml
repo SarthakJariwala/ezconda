@@ -31,8 +31,8 @@ plugins:
 extra:
   version:
     provider: mike
-  analytics:
-    provider: plausible
+  # analytics:
+  #   provider: plausible
 
 nav:
   - Home : "index.md"
