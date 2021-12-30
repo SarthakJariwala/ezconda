@@ -54,11 +54,11 @@ def read_lock_file_and_install(lock_file: Path, env_name: str, verbose: bool) ->
                 raise typer.Exit()
 
             console.print(
-                f"[bold green] :check: Installed all packages from channel : {channel}",
+                f"[bold green] :rocket: Installed all packages from channel : {channel}",
             )
 
         console.print(
-            f"[bold green] :rocket: Installed all dependencies from '{lock_file}'!"
+            f"[bold green] :star: Installed all dependencies from '{lock_file}'!"
         )
 
 
