@@ -46,7 +46,7 @@ def install(
         env_specs = add_pkg_to_dependencies(env_specs, pkg_name)
         env_specs = add_new_channel_to_env_specs(env_specs, channel)
 
-        status.update("[magenta]Installing packages")
+        status.update("[magenta]Resolving & Installing packages")
         time.sleep(0.5)
 
         if not channel:

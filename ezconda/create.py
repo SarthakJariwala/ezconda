@@ -63,7 +63,7 @@ def create(
         time.sleep(0.5)
 
         if packages:
-            status.update(status="[magenta]Resolving packages")
+            status.update(status="[magenta]Resolving & Installing packages")
             time.sleep(0.5)
 
         if not channel:
