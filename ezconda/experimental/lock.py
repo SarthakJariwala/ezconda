@@ -5,7 +5,7 @@ import json
 from ..console import console
 
 
-__all__ = ["write_lock_file", "read_lock_file_and_install"]
+__all__ = ["write_lock_file"]
 
 
 def write_lock_file(env_name) -> None:
