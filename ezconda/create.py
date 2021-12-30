@@ -36,7 +36,7 @@ def create(
     Environment file contains environment specifications and 'lock' file contains complete
     specifications for reproducible environment builds.
     """
-    
+
     # create a yml file to write specs to
     if file is None:
         file = Path(f"{name}.yml")
