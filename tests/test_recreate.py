@@ -62,6 +62,6 @@ def test_recreate_w_env_name(clean_up_env_after_test):
     # check if typer is installed in the env
     pkgs = json.load(os.popen(f"conda list -n {env_name} --json"))
     for pkg in pkgs:
-        if pkg == "typer":
+        if pkg["name"] == "typer":
             assert pkg["name"] == "typer"
             assert pkg["channel"] == "conda-forge"
