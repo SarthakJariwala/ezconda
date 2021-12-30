@@ -2,6 +2,8 @@ from conda.cli.python_api import Commands, run_command
 from pathlib import Path
 import typer
 import json
+from ..console import console
+
 
 __all__ = ["write_lock_file", "read_lock_file_and_install"]
 
@@ -10,7 +12,7 @@ def write_lock_file(env_name) -> None:
     """
     Writes a lock file for the environment specified.
     """
-    # typer.secho(f"Writing lock file... [EXPERIMENTAL]", fg=typer.colors.MAGENTA)
+
     # generate lock file
     stdout, _, _ = run_command(Commands.LIST, "-n", f"{env_name}", "--json")
     complete_specs = json.loads(stdout)
@@ -22,7 +24,6 @@ def write_lock_file(env_name) -> None:
     # write lock file
     with open(f"{env_name}-{platform[0]}.lock", "w") as f:
         json.dump(complete_specs, f, indent=4)
-    # typer.secho(f"Done!", fg=typer.colors.BRIGHT_GREEN)
 
 
 def read_lock_file_and_install(lock_file: Path, env_name: str, verbose: bool) -> None:
@@ -33,9 +34,9 @@ def read_lock_file_and_install(lock_file: Path, env_name: str, verbose: bool) ->
     If errors are encountered during installation, user is informed.
     """
 
-    typer.secho(f"Creating environment {env_name}...", fg=typer.colors.YELLOW)
+    console.print(f"[yellow]Creating environment {env_name}")
     _ = run_command(Commands.CREATE, "-n", env_name, use_exception_handler=True)
-    typer.secho(f"Reading lock file... [EXPERIMENTAL]", fg=typer.colors.MAGENTA)
+    console.print(f"[magenta]Reading lock file [EXPERIMENTAL]")
     with open(lock_file, "r") as f:
         complete_spec = json.load(f)
 
@@ -43,17 +44,13 @@ def read_lock_file_and_install(lock_file: Path, env_name: str, verbose: bool) ->
 
     for channel in channels:
         # get package-version-build for packages from a channel
-        typer.secho(
-            f"Collecting packages for channel : {channel}", fg=typer.colors.YELLOW
-        )
+        console.print(f"[yellow]Collecting packages for channel : {channel}")
         pvb = [
             f"{d['name']}={d['version']}={d['build_string']}"
             for d in complete_spec
             if d["channel"] == channel
         ]
-        typer.secho(
-            f"Installing packages for channel : {channel}", fg=typer.colors.YELLOW
-        )
+        console.print(f"[yellow]Installing packages for channel : {channel}")
         stdout, stderr, exit_code = run_command(
             Commands.INSTALL, "-n", env_name, *pvb, "-c", channel
         )
@@ -62,13 +59,10 @@ def read_lock_file_and_install(lock_file: Path, env_name: str, verbose: bool) ->
             typer.echo(stdout)
 
         if exit_code != 0:
-            typer.secho(str(stdout + stderr), color=typer.colors.BRIGHT_RED)
+            console.print("[red]" + str(stdout + stderr))
             raise typer.Exit()
-        typer.secho(
-            f"Installed all packages from channel : {channel}",
-            fg=typer.colors.BRIGHT_GREEN,
+        console.print(
+            f"[bold green]Installed all packages from channel : {channel}",
         )
 
-    typer.secho(
-        f"Installed all dependencies from '{lock_file}'!", fg=typer.colors.BRIGHT_GREEN
-    )
+    console.print(f"[bold green]Installed all dependencies from '{lock_file}'!")

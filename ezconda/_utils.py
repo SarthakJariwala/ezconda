@@ -5,6 +5,8 @@ import typer
 from pathlib import Path
 from typing import Optional, Dict, List
 
+from .console import console
+
 
 def create_initial_env_specs(
     env_name: str, channel: Optional[str] = None, packages: Optional[List[str]] = None
@@ -32,20 +34,20 @@ def get_validate_file_name(env_name: str, file: Optional[str] = None) -> Optiona
     if not file:
         # first look for existing yml file
         if not Path(f"{env_name}.yml").is_file():
-            typer.secho(f"Couldn't locate {env_name}.yml", fg=typer.colors.YELLOW)
+            console.print(f"[yellow]Couldn't locate {env_name}.yml")
             env_file = typer.prompt("Please provide the environment file to update")
             # check if new file provided is valid
             if Path(env_file).is_file():
                 file = Path(env_file)
             else:
-                typer.secho(f"Could not locate {env_file}'", fg=typer.colors.BRIGHT_RED)
+                console.print(f"[magenta]Could not locate {env_file}'")
                 raise typer.Exit()
         else:
             file = Path(f"{env_name}.yml")
     # validate the file that the user provides
     else:
         if not Path(file).is_file():
-            typer.secho(f"Could not locate {file}'", fg=typer.colors.BRIGHT_RED)
+            console.print(f"[magenta]Could not locate {file}'")
             raise typer.Exit()
     return file
 
@@ -80,9 +82,8 @@ def add_pkg_to_dependencies(env_specs: Dict, pkg_name: List[str]) -> Dict:
         for pkg in pkg_name:
             for ext_pkg in existing_packages:
                 if pkg in ext_pkg:
-                    typer.secho(
-                        f"{pkg} already exists. Skipping installation. If you want to update {pkg}, use `update` instead.",
-                        fg=typer.colors.YELLOW,
+                    console.print(
+                        f"[yellow]'{pkg}' already exists. Skipping installation. If you want to update {pkg}, use `update` instead."
                     )
                     raise typer.Exit()
 
@@ -121,14 +122,13 @@ def remove_pkg_from_dependencies(env_specs: Dict, pkg_name: List[str]) -> Dict:
                 existing_packages.remove(pkg)
                 env_specs["dependencies"] = existing_packages
             else:
-                typer.secho(
-                    f"{pkg} is not listed in environment 'yml' file!",
-                    fg=typer.colors.BRIGHT_RED,
+                console.print(
+                    f"[bold red]'{pkg}' is not listed in '{env_specs['name']}.yml' file!"
                 )
                 raise typer.Exit()
     else:
-        typer.secho(
-            "There are no packages listed in the yml file.", fg=typer.colors.BRIGHT_RED
+        console.print(
+            f"[bold red]There are no packages listed in '{env_specs['name']}.yml' file."
         )
         raise typer.Exit()
     return env_specs
