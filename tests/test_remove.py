@@ -13,8 +13,8 @@ def test_remove_single_pkg(clean_up_env_after_test):
     )
     result = runner.invoke(app, ["remove", "-n", "test", "typer"])
 
-    assert "Removing packages..." in result.stdout
-    assert "Removal complete!" in result.stdout
+    assert "Removed packages from test" in result.stdout
+    assert "Saved specifications to 'test.yml'" in result.stdout
 
 
 @pytest.mark.usefixtures("clean_up_env_after_test")
@@ -25,8 +25,8 @@ def test_remove_multiple_pkgs(clean_up_env_after_test):
     )
     result = runner.invoke(app, ["remove", "-n", "test", "typer", "numpy"])
 
-    assert "Removing packages..." in result.stdout
-    assert "Removal complete!" in result.stdout
+    assert "Removed packages from test" in result.stdout
+    assert "Saved specifications to 'test.yml'" in result.stdout
 
 
 @pytest.mark.usefixtures("clean_up_env_after_test")
@@ -43,3 +43,15 @@ def test_remove_an_non_existant_pkg(clean_up_env_after_test):
     result = runner.invoke(app, ["remove", "-n", "test", "typer"])
 
     assert "typer is not listed in environment 'yml' file!" in result.stdout
+
+
+# @pytest.mark.usefixtures("clean_up_env_after_test")
+# def test_remove_a_pkg_that_is_a_dep_for_other(clean_up_env_after_test):
+#     _ = runner.invoke(
+#         app,
+#         ["create", "-n", "test", "-c", "conda-forge", "python=3.8", "numpy", "pandas"],
+#     )
+#     result = runner.invoke(app, ["remove", "-n", "test", "numpy"])
+
+#     assert "There are packages that depend on ('numpy',)" in result.stdout
+#     assert "Removing ('numpy',) will also remove the following" in result.stdout
