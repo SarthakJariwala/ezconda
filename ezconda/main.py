@@ -7,6 +7,7 @@ from .tree import show
 from .create import create
 from .install import install
 from .remove import remove
+from .recreate import recreate
 
 
 app = typer.Typer()
@@ -14,6 +15,7 @@ app = typer.Typer()
 app.command()(create)
 app.command()(install)
 app.command()(remove)
+app.command()(recreate)
 app.command()(show)
 
 
