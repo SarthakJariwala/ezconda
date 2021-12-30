@@ -42,7 +42,7 @@ def test_remove_an_non_existant_pkg(clean_up_env_after_test):
     )
     result = runner.invoke(app, ["remove", "-n", "test", "typer"])
 
-    assert "typer is not listed in environment 'yml' file!" in result.stdout
+    assert "'typer' is not listed in 'test.yml' file!" in result.stdout
 
 
 # @pytest.mark.usefixtures("clean_up_env_after_test")

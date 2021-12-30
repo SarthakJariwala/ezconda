@@ -50,4 +50,4 @@ def test_install_an_existing_pkgs(clean_up_env_after_test):
     _ = runner.invoke(app, ["create", "-n", "test", "python=3.8", "typer"])
     result = runner.invoke(app, ["install", "-n", "test", "typer"])
 
-    assert "typer already exists. Skipping installation." in result.stdout
+    assert "'typer' already exists. Skipping installation." in result.stdout
