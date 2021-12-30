@@ -74,7 +74,7 @@ def remove(
         env_specs = remove_pkg_from_dependencies(env_specs, pkg_name)
 
         status.update("[magenta]Removing packages")
-        time.sleep(1)
+        time.sleep(0.5)
 
         stdout, stderr, exit_code = run_command(
             Commands.REMOVE, "-n", env_name, *pkg_name, use_exception_handler=True
@@ -92,7 +92,7 @@ def remove(
         console.print(f"[bold green] :rocket: Removed packages from {env_name}")
 
         status.update(f"[magenta]Writing specifications to {file}")
-        time.sleep(1)
+        time.sleep(0.5)
         write_env_file(env_specs, file)
         console.print(f"[bold green] :floppy_disk: Saved specifications to '{file}'")
 
@@ -100,7 +100,7 @@ def remove(
             status.update(
                 f"[yellow]:warning: EXPERIMENTAL :warning: [magenta]Writing lock file "
             )
-            time.sleep(1)
+            time.sleep(0.5)
             write_lock_file(env_name)
             console.print(
                 f"[bold green] :lock: Lock file generated [bold yellow]:warning: EXPERIMENTAL :warning:"
