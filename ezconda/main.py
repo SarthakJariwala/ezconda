@@ -3,7 +3,7 @@ import typer
 from . import __version__
 from .console import console
 
-from .tree import show
+# from .tree import show
 from .create import create
 from .install import install
 from .remove import remove
@@ -16,7 +16,7 @@ app.command()(create)
 app.command()(install)
 app.command()(remove)
 app.command()(recreate)
-app.command()(show)
+# app.command()(show)
 
 
 @app.command()
