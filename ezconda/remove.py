@@ -82,6 +82,7 @@ def remove(
                 "-n",
                 env_name,
                 *pkg_name,
+                "-y",
             ],
             capture_output=True,
             text=True,

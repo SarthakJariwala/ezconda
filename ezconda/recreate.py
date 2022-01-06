@@ -26,7 +26,7 @@ def read_lock_file_and_install(lock_file: Path, env_name: str, verbose: bool) ->
         status.update(f"[magenta]Creating conda environment {env_name}")
         # time.sleep(0.5)
         p = subprocess.run(
-            ["conda", "create", "-n", env_name], capture_output=True, text=True
+            ["conda", "create", "-n", env_name, "-y"], capture_output=True, text=True
         )
 
         # find the channels in the lock file
@@ -52,6 +52,7 @@ def read_lock_file_and_install(lock_file: Path, env_name: str, verbose: bool) ->
                     *pvb,
                     "-c",
                     channel,
+                    "-y",
                 ],
                 capture_output=True,
                 text=True,
