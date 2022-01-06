@@ -1,3 +1,4 @@
+import subprocess
 import typer
 import time
 import json
@@ -5,9 +6,6 @@ import os
 import conda.exports
 
 from typing import List, Optional
-from pathlib import Path
-from conda.cli.python_api import Commands
-from conda.cli.python_api import run_command
 
 from .console import console
 from ._utils import (
@@ -16,6 +14,7 @@ from ._utils import (
     remove_pkg_from_dependencies,
     write_env_file,
     update_channels_after_removal,
+    recheck_dependencies,
 )
 from .experimental import write_lock_file
 
@@ -74,25 +73,37 @@ def remove(
         env_specs = remove_pkg_from_dependencies(env_specs, pkg_name)
 
         status.update("[magenta]Removing packages")
-        time.sleep(0.5)
+        # time.sleep(0.5)
 
-        stdout, stderr, exit_code = run_command(
-            Commands.REMOVE, "-n", env_name, *pkg_name, use_exception_handler=True
+        p = subprocess.run(
+            [
+                "conda",
+                "remove",
+                "-n",
+                env_name,
+                *pkg_name,
+            ],
+            capture_output=True,
+            text=True,
         )
 
-        if exit_code != 0:
-            console.print(f"[red]{str(stdout + stderr)}")
+        if p.returncode != 0:
+            console.print(f"[red]{str(p.stdout + p.stderr)}")
             raise typer.Exit()
 
         if verbose:
-            console.print(f"[yellow]{str(stdout)}")
+            console.print(f"[yellow]{str(p.stdout)}")
 
         env_specs = update_channels_after_removal(env_specs, env_name)
+
+        # check if any dependent packages are removed from env but not from .yml file
+        # if so, remove them from .yml file
+        env_specs = recheck_dependencies(env_specs, env_name)
 
         console.print(f"[bold green] :rocket: Removed packages from {env_name}")
 
         status.update(f"[magenta]Writing specifications to {file}")
-        time.sleep(0.5)
+        # time.sleep(0.5)
         write_env_file(env_specs, file)
         console.print(f"[bold green] :floppy_disk: Saved specifications to '{file}'")
 
@@ -100,7 +111,7 @@ def remove(
             status.update(
                 f"[yellow]:warning: EXPERIMENTAL :warning: [magenta]Writing lock file "
             )
-            time.sleep(0.5)
+            # time.sleep(0.5)
             write_lock_file(env_name)
             console.print(
                 f"[bold green] :lock: Lock file generated [bold yellow]:warning: EXPERIMENTAL :warning:"

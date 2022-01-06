@@ -1,10 +1,9 @@
+import subprocess
 import typer
 import time
 import json
-from typing import List, Optional
+from typing import Optional
 from pathlib import Path
-from conda.cli.python_api import Commands
-from conda.cli.python_api import run_command
 
 from .console import console
 
@@ -18,15 +17,17 @@ def read_lock_file_and_install(lock_file: Path, env_name: str, verbose: bool) ->
     """
 
     with console.status(f"[magenta]Reading lock file") as status:
-        time.sleep(0.5)
+        # time.sleep(0.5)
 
         with open(lock_file, "r") as f:
             complete_spec = json.load(f)
 
         # only create environment if lock file load is successful
         status.update(f"[magenta]Creating conda environment {env_name}")
-        time.sleep(0.5)
-        _ = run_command(Commands.CREATE, "-n", env_name, use_exception_handler=True)
+        # time.sleep(0.5)
+        p = subprocess.run(
+            ["conda", "create", "-n", env_name], capture_output=True, text=True
+        )
 
         # find the channels in the lock file
         channels = list(set([d["channel"] for d in complete_spec]))
@@ -34,23 +35,33 @@ def read_lock_file_and_install(lock_file: Path, env_name: str, verbose: bool) ->
         for channel in channels:
             # get package-version-build for packages from a channel
             status.update(f"[magenta]Collecting packages for channel : {channel}")
-            time.sleep(0.5)
+            # time.sleep(0.5)
             pvb = [
                 f"{d['name']}={d['version']}={d['build_string']}"
                 for d in complete_spec
                 if d["channel"] == channel
             ]
             status.update(f"[magenta]Installing packages for channel : {channel}")
-            time.sleep(0.5)
-            stdout, stderr, exit_code = run_command(
-                Commands.INSTALL, "-n", env_name, *pvb, "-c", channel
+            # time.sleep(0.5)
+            p = subprocess.run(
+                [
+                    "conda",
+                    "install",
+                    "-n",
+                    env_name,
+                    *pvb,
+                    "-c",
+                    channel,
+                ],
+                capture_output=True,
+                text=True,
             )
 
             if verbose:
-                console.print(f"[bold yellow]{stdout}")
+                console.print(f"[bold yellow]{p.stdout}")
 
-            if exit_code != 0:
-                console.print("[red]" + str(stdout + stderr))
+            if p.returncode != 0:
+                console.print("[red]" + str(p.stdout + p.stderr))
                 raise typer.Exit()
 
             console.print(

@@ -1,3 +1,4 @@
+import subprocess
 import typer
 import time
 from typing import List, Optional
@@ -60,39 +61,46 @@ def create(
     env_specs = create_initial_env_specs(name, channel, packages)
 
     with console.status(f"[magenta]Creating new conda environment {name}") as status:
-        time.sleep(0.5)
+        # time.sleep(0.5)
 
         if packages:
             status.update(status="[magenta]Resolving & Installing packages")
-            time.sleep(0.5)
+            # time.sleep(0.5)
 
         if not channel:
-            stdout, stderr, exit_code = run_command(
-                Commands.CREATE, "-n", name, *packages, use_exception_handler=True
+            p = subprocess.run(
+                ["conda", "create", "-n", name, *packages, "-y"],
+                capture_output=True,
+                text=True,
             )
 
         else:
-            stdout, stderr, exit_code = run_command(
-                Commands.CREATE,
-                "-n",
-                name,
-                "--channel",
-                channel,
-                *packages,
-                use_exception_handler=True,
+            p = subprocess.run(
+                [
+                    "conda",
+                    "create",
+                    "-n",
+                    name,
+                    "--channel",
+                    channel,
+                    *packages,
+                    "-y",
+                ],
+                capture_output=True,
+                text=True,
             )
 
-        if exit_code != 0:
-            console.print(f"[red]{str(stdout + stderr)}")
+        if p.returncode != 0:
+            console.print(f"[red]{str(p.stdout + p.stderr)}")
             raise typer.Exit()
 
         if verbose:
-            console.print(f"[bold yellow]{stdout}")
+            console.print(f"[bold yellow]{str(p.stdout)}")
 
         console.print(f"[bold green] :rocket: Created '{name}' environment")
 
         status.update(f"[magenta]Writing specifications to {file}")
-        time.sleep(0.5)
+        # time.sleep(0.5)
         write_env_file(env_specs, file)
         console.print(f"[bold green] :floppy_disk: Saved specifications to '{file}'")
 
@@ -102,7 +110,7 @@ def create(
             status.update(
                 f"[yellow]:warning: EXPERIMENTAL :warning: [magenta]Writing lock file "
             )
-            time.sleep(0.5)
+            # time.sleep(0.5)
             write_lock_file(name)
             console.print(
                 f"[bold green] :lock: Lock file generated [bold yellow]:warning: EXPERIMENTAL :warning:"
