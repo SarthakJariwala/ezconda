@@ -1,4 +1,5 @@
 import json
+import re
 from conda.cli.python_api import Commands, run_command
 import yaml
 import typer
@@ -74,18 +75,24 @@ def add_pkg_to_dependencies(env_specs: Dict, pkg_name: List[str]) -> Dict:
     If package/s does not exist, adds it to 'dependencies' section in 'yml' file.
     """
 
-    # TODO - check how this handles multiple '>'/'<' dependencies
-    # FOR EXAMPLE - 'numpy>1.1' and 'numpy>1.8' should not lead to two entries in the env.yml file
     existing_packages = env_specs.get("dependencies")
+
     # check if packages already exists
     if existing_packages:
+        # create a list of existing packages without >,<,=
+        existing_packages_re = [re.findall(r"\w+", d)[0] for d in existing_packages]
+
         for pkg in pkg_name:
-            for ext_pkg in existing_packages:
-                if pkg in ext_pkg:
-                    console.print(
-                        f"[yellow]'{pkg}' already exists. Skipping installation. If you want to update {pkg}, use `update` instead."
-                    )
-                    raise typer.Exit()
+            # strip any >,<,= from the package name that the user provided
+            pkg_re = re.findall(r"\w+", pkg)[0]
+
+            # exit if package already exists in the env.yml file
+            if pkg_re in existing_packages_re:
+                console.print(
+                    f"[yellow]'{pkg_re}' already exists. Skipping installation.\n"
+                    f"[yellow]If you want to update {pkg_re}, use `update` instead."
+                )
+                raise typer.Exit()
 
         env_specs["dependencies"] = existing_packages + list(pkg_name)
     else:
@@ -112,20 +119,32 @@ def remove_pkg_from_dependencies(env_specs: Dict, pkg_name: List[str]) -> Dict:
     If package/s exist, remove it from 'dependencies' section in 'yml' file.
     """
 
-    # TODO - check how this handles multiple '>'/'<' dependencies
-    # FOR EXAMPLE - 'numpy>1.1' and 'numpy>1.8' should not lead to two entries in the env.yml file
     existing_packages = env_specs.get("dependencies")
-    # check if packages already exists
+
+    # check if packages exists in specifications
     if existing_packages:
+        # create a list of existing packages without >,<,=
+        existing_packages_re = [re.findall(r"\w+", d)[0] for d in existing_packages]
         for pkg in pkg_name:
-            if pkg in existing_packages:
-                existing_packages.remove(pkg)
-                env_specs["dependencies"] = existing_packages
-            else:
+            # strip any >,<,= from the package name that the user provided
+            pkg_re = re.findall(r"\w+", pkg)[0]
+
+            # check if the package exists in the existing packages list
+            if pkg_re not in existing_packages_re:
                 console.print(
                     f"[bold red]'{pkg}' is not listed in '{env_specs['name']}.yml' file!"
                 )
                 raise typer.Exit()
+
+            # this will only run if the package was found in the existing packages list
+            for ext_pkg_re, ext_pkg in zip(existing_packages_re, existing_packages):
+                if pkg_re == ext_pkg_re:
+                    existing_packages.remove(ext_pkg)
+                    existing_packages_re.remove(
+                        ext_pkg_re
+                    )  # need to remove it from this list as well otherwise zip will create an issue
+                    env_specs["dependencies"] = existing_packages
+
     else:
         console.print(
             f"[bold red]There are no packages listed in '{env_specs['name']}.yml' file."
@@ -147,4 +166,27 @@ def update_channels_after_removal(env_specs: Dict, env_name: str) -> Dict:
     new_channels = list(set([d["channel"] for d in complete_dict]))
     new_channels.append("defaults")  # 'defaults' needs to be added back?
     env_specs["channels"] = new_channels
+    return env_specs
+
+
+def recheck_dependencies(env_specs: Dict, env_name: str) -> Dict:
+    """
+    Check if while removing a package, any dependent packages are also removed from env
+    but not from .yml file. If so, remove them from .yml file
+    """
+    stdout, _, _ = run_command(Commands.LIST, "-n", env_name, "--json")
+    complete_dict = json.loads(stdout)
+    all_pkgs = set([d["name"] for d in complete_dict])
+
+    deps = env_specs["dependencies"]  # this may have dependencies with ">,<,=" symbols
+    deps_re = [re.findall(r"\w+", d)[0] for d in deps]  # removing the symbols
+
+    rem_pkgs_to_be_removed_from_yml = set(deps_re) - all_pkgs
+    if rem_pkgs_to_be_removed_from_yml:
+        if "python" in rem_pkgs_to_be_removed_from_yml:
+            rem_pkgs_to_be_removed_from_yml.remove("python")
+        env_specs = remove_pkg_from_dependencies(
+            env_specs, rem_pkgs_to_be_removed_from_yml
+        )
+
     return env_specs
