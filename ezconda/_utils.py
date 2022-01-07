@@ -1,6 +1,6 @@
 import json
 import re
-from conda.cli.python_api import Commands, run_command
+import subprocess
 import yaml
 import typer
 from pathlib import Path
@@ -159,10 +159,12 @@ def update_channels_after_removal(env_specs: Dict, env_name: str) -> Dict:
     """
 
     # get list of channels
-    stdout, _, _ = run_command(Commands.LIST, "-n", env_name, "--json")
+    p = subprocess.run(
+        ["conda", "list", "-n", env_name, "--json"], capture_output=True, text=True
+    )
 
     # identify unique ones and update channels in env_specs
-    complete_dict: List[Dict] = json.loads(stdout)
+    complete_dict: List[Dict] = json.loads(p.stdout)
     new_channels = list(set([d["channel"] for d in complete_dict]))
     new_channels.append("defaults")  # 'defaults' needs to be added back?
     env_specs["channels"] = new_channels
@@ -174,8 +176,10 @@ def recheck_dependencies(env_specs: Dict, env_name: str) -> Dict:
     Check if while removing a package, any dependent packages are also removed from env
     but not from .yml file. If so, remove them from .yml file
     """
-    stdout, _, _ = run_command(Commands.LIST, "-n", env_name, "--json")
-    complete_dict = json.loads(stdout)
+    p = subprocess.run(
+        ["conda", "list", "-n", env_name, "--json"], capture_output=True, text=True
+    )
+    complete_dict = json.loads(p.stdout)
     all_pkgs = set([d["name"] for d in complete_dict])
 
     deps = env_specs["dependencies"]  # this may have dependencies with ">,<,=" symbols
