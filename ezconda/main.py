@@ -10,7 +10,7 @@ from .remove import remove
 from .recreate import recreate
 
 
-app = typer.Typer()
+app = typer.Typer(help="Conda environment and specifications lifecycle management")
 
 app.command()(create)
 app.command()(install)
