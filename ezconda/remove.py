@@ -22,7 +22,11 @@ from .experimental import write_lock_file
 def remove(
     pkg_name: List[str] = typer.Argument(..., help="Packages to uninstall"),
     env_name: str = typer.Option(
-        ..., "--name", "-n", help="Name of the environment to uninstall package from"
+        ...,
+        "--name",
+        "-n",
+        prompt="Name of the environment to remove from",
+        help="Name of the environment to uninstall package from"
     ),
     file: Optional[str] = typer.Option(
         None, "--file", "-f", help="'.yml' file to update with removed packages"

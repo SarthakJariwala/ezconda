@@ -20,7 +20,11 @@ from .experimental import write_lock_file
 def install(
     pkg_name: List[str] = typer.Argument(..., help="Packages to install"),
     env_name: str = typer.Option(
-        ..., "--name", "-n", help="Name of the environment to install package into"
+        ...,
+        "--name",
+        "-n",
+        prompt="Name of the environment to install in",
+        help="Name of the environment to install package into",
     ),
     file: Optional[str] = typer.Option(
         None, "--file", "-f", help="'.yml' file to update with new packages"
