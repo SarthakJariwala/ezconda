@@ -38,7 +38,7 @@ nav:
   - Home : "index.md"
   - Features:
     - Create new environment : "features/create_new_env.md"
-    - Install packages : "featues/install_packages.md"
+    - Install packages : "features/install_packages.md"
   - License : "license.md"
 
 markdown_extensions:
