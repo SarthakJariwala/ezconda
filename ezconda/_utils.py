@@ -5,6 +5,7 @@ import yaml
 import typer
 from pathlib import Path
 from typing import Optional, Dict, List
+from textwrap import dedent
 
 from .console import console
 
@@ -36,19 +37,17 @@ def get_validate_file_name(env_name: str, file: Optional[str] = None) -> Optiona
         # first look for existing yml file
         if not Path(f"{env_name}.yml").is_file():
             console.print(f"[yellow]Couldn't locate {env_name}.yml")
-            env_file = typer.prompt("Please provide the environment file to update")
-            # check if new file provided is valid
-            if Path(env_file).is_file():
-                file = Path(env_file)
-            else:
-                console.print(f"[magenta]Could not locate {env_file}'")
-                raise typer.Exit()
+            console.print(dedent(f"""
+            [yellow]If your environment name and specifications file name are not the same,
+            please provide the specifications file name to update using the '-f' or '--file' flag.
+            """))
+            raise typer.Exit()
         else:
             file = Path(f"{env_name}.yml")
     # validate the file that the user provides
     else:
         if not Path(file).is_file():
-            console.print(f"[magenta]Could not locate {file}'")
+            console.print(f"[magenta]Could not locate '{file}'")
             raise typer.Exit()
     return file
 
