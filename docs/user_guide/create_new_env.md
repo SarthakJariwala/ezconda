@@ -1,4 +1,6 @@
-# Create New Environment - `create`
+# Create New Environment
+
+You can use the `create` command to create new conda environments with environment specifications file (more below).
 
 ## Create new environment with packages
 
@@ -21,13 +23,13 @@ $ ezconda create -n new-proj python=3.9
 ⭐ Done!
 ```
 </div>
-!!! Note
+
+!!! Tip
     `ezconda` is *almost* a drop-in replacement for `conda`.
 
-Upon creating a new conda environment, `ezconda` also automatically creates a new specifications file `new-proj.yml`. As you can see below, the contents of the file contain the specifications entered above. 
+Upon creating a new conda environment, **EZconda** also automatically creates a new specifications file `new-proj.yml`. As you can see below, the contents of the file contain the specifications entered above. 
 
-```YAML
-# contents of new-proj.yml
+```yaml title="new-proj.yml"
 name: new-proj
 channels:
     - defaults
@@ -35,11 +37,15 @@ dependencies:
     - python=3.9
 ```
 
-Now, throughout the lifecycle of `new-proj` environment and your project, `ezconda` will manage this specifications file and update it as you make changes to the enironment.
+Now, throughout the lifecycle of `new-proj` environment and your project, **EZconda** will manage this specifications file and update it as you make changes to the enironment.
+
+!!! Tip
+    Lock file generation is optional, but recommended for creating reproducible environment builds.
+    
+    You can disable it by passing `--no-lock` option.
 
 !!! Note
-    Lock file generation is optional, but recommended for creating reproducible environment builds.
-    You can disable it by passing `--no-lock` option to the `create` command.
+    You will learn more about lock file later in the docs.
 
 
 ## Add channels
@@ -55,8 +61,7 @@ $ ezconda create -n new-proj -c conda-forge python=3.9
 
 The environment specification file, `new-proj.yml`,  now contains `conda-forge` in the channels section.
 
-```YAML hl_lines="4"
-# contents of new-proj.yml
+```YAML hl_lines="3" title="new-proj.yml"
 name: new-proj
 channels:
     - conda-forge

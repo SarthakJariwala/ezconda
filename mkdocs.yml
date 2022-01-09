@@ -21,6 +21,7 @@ theme:
   features:
     - search.suggest
     - search.highlight
+    - content.code.annotate
   font:
     text: Roboto
     code: Roboto Mono

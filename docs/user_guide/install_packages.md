@@ -1,6 +1,6 @@
 # Install Packages
 
-`ezconda` will keep track of the packages you install in your environment and update the environment specifications file and lock file accordingly.
+**EZconda** will keep track of the packages you install in your environment and update the environment specifications file and lock file accordingly.
 
 ## Install packages
 
@@ -28,7 +28,7 @@ ezconda install -n new-proj numpy pandas
 
 The new packages will be reflected in environment specification file - `new-proj.yml`.
 
-```YAML hl_lines="5 6"
+```YAML hl_lines="5 6" title="new-proj.yml"
 name: new-proj
 channels:
     - defaults
@@ -48,8 +48,7 @@ However, the lock file contains `libopenblas` and all other dependencies of `num
 
 Check it:
 
-```JSON
-# contents of the updated lock file
+```JSON title="new-proj lock file"
 {
 ...
     "dist_name": "libopenblas-0.3.13-hf4835c0_1",
@@ -80,7 +79,7 @@ ezconda install -n new-proj -c conda-forge numpy pandas
 ```
 </div>
 
-```YAML hl_lines="3 5 6"
+```YAML hl_lines="3 6 7" title="new-proj.yml"
 name: new-proj
 channels:
     - conda-forge
