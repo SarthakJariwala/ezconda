@@ -88,7 +88,7 @@ def install(
         status.update(f"[magenta]Writing specifications to {file}")
         # time.sleep(0.5)
         write_env_file(env_specs, file)
-        console.print(f"[bold green] :floppy_disk: Saved specifications to '{file}'")
+        console.print(f"[bold green] :floppy_disk: Updated specifications to '{file}'")
 
         if lock:
             status.update(
@@ -97,7 +97,7 @@ def install(
             # time.sleep(0.5)
             write_lock_file(env_name)
             console.print(
-                f"[bold green] :lock: Lock file generated [bold yellow]:warning: EXPERIMENTAL :warning:"
+                f"[bold green] :lock: Lock file updated [bold yellow]:warning: EXPERIMENTAL :warning:"
             )
 
         console.print(f"[bold green] :star: Done!")

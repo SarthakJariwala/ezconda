@@ -12,7 +12,7 @@ def test_install_w_no_existing_pkgs(clean_up_env_after_test):
     result = runner.invoke(app, ["install", "-n", "test", "python=3.8"])
 
     assert "Installed packages" in result.stdout
-    assert "Saved specifications to 'test.yml'" in result.stdout
+    assert "Updated specifications to 'test.yml'" in result.stdout
 
 
 @pytest.mark.usefixtures("clean_up_env_after_test")
@@ -31,7 +31,7 @@ def test_install_w_channel_and_no_existing_pkgs(clean_up_env_after_test):
     )
 
     assert "Installed packages" in result.stdout
-    assert "Saved specifications to 'test.yml'" in result.stdout
+    assert "Updated specifications to 'test.yml'" in result.stdout
 
 
 @pytest.mark.usefixtures("clean_up_env_after_test")
@@ -42,7 +42,7 @@ def test_install_with_existing_pkgs(clean_up_env_after_test):
     result = runner.invoke(app, ["install", "-n", "test", "-c", "conda-forge", "numpy"])
 
     assert "Installed packages" in result.stdout
-    assert "Saved specifications to 'test.yml'" in result.stdout
+    assert "Updated specifications to 'test.yml'" in result.stdout
 
 
 @pytest.mark.usefixtures("clean_up_env_after_test")
