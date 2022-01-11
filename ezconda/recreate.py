@@ -1,6 +1,5 @@
 import subprocess
 import typer
-import time
 import json
 from typing import Optional
 from pathlib import Path
@@ -17,14 +16,13 @@ def read_lock_file_and_install(lock_file: Path, env_name: str, verbose: bool) ->
     """
 
     with console.status(f"[magenta]Reading lock file") as status:
-        # time.sleep(0.5)
 
         with open(lock_file, "r") as f:
             complete_spec = json.load(f)
 
         # only create environment if lock file load is successful
         status.update(f"[magenta]Creating conda environment {env_name}")
-        # time.sleep(0.5)
+
         p = subprocess.run(
             ["conda", "create", "-n", env_name, "-y"], capture_output=True, text=True
         )
@@ -35,14 +33,14 @@ def read_lock_file_and_install(lock_file: Path, env_name: str, verbose: bool) ->
         for channel in channels:
             # get package-version-build for packages from a channel
             status.update(f"[magenta]Collecting packages for channel : {channel}")
-            # time.sleep(0.5)
+
             pvb = [
                 f"{d['name']}={d['version']}={d['build_string']}"
                 for d in complete_spec
                 if d["channel"] == channel
             ]
             status.update(f"[magenta]Installing packages for channel : {channel}")
-            # time.sleep(0.5)
+
             p = subprocess.run(
                 [
                     "conda",

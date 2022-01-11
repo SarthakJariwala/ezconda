@@ -1,6 +1,5 @@
 import subprocess
 import typer
-import time
 from typing import List, Optional
 from pathlib import Path
 from conda.cli.python_api import Commands
@@ -44,7 +43,7 @@ def install(
     """
 
     with console.status(f"[magenta]Validating file, packages, channels") as status:
-        # time.sleep(0.5)
+
         file = get_validate_file_name(env_name, file)
 
         env_specs = read_env_file(file)
@@ -52,7 +51,6 @@ def install(
         env_specs = add_new_channel_to_env_specs(env_specs, channel)
 
         status.update("[magenta]Resolving & Installing packages")
-        # time.sleep(0.5)
 
         if not channel:
             p = subprocess.run(
@@ -86,7 +84,7 @@ def install(
         console.print(f"[bold green] :rocket: Installed packages in {env_name}")
 
         status.update(f"[magenta]Writing specifications to {file}")
-        # time.sleep(0.5)
+
         write_env_file(env_specs, file)
         console.print(f"[bold green] :floppy_disk: Updated specifications to '{file}'")
 
@@ -94,7 +92,7 @@ def install(
             status.update(
                 f"[yellow]:warning: EXPERIMENTAL :warning: [magenta]Writing lock file "
             )
-            # time.sleep(0.5)
+
             write_lock_file(env_name)
             console.print(
                 f"[bold green] :lock: Lock file updated [bold yellow]:warning: EXPERIMENTAL :warning:"

@@ -1,6 +1,5 @@
 import subprocess
 import typer
-import time
 from typing import List, Optional
 from pathlib import Path
 from conda.cli.python_api import Commands
@@ -61,11 +60,9 @@ def create(
     env_specs = create_initial_env_specs(name, channel, packages)
 
     with console.status(f"[magenta]Creating new conda environment {name}") as status:
-        # time.sleep(0.5)
 
         if packages:
             status.update(status="[magenta]Resolving & Installing packages")
-            # time.sleep(0.5)
 
         if not channel:
             p = subprocess.run(
@@ -100,7 +97,6 @@ def create(
         console.print(f"[bold green] :rocket: Created '{name}' environment")
 
         status.update(f"[magenta]Writing specifications to {file}")
-        # time.sleep(0.5)
         write_env_file(env_specs, file)
         console.print(f"[bold green] :floppy_disk: Saved specifications to '{file}'")
 
@@ -110,7 +106,7 @@ def create(
             status.update(
                 f"[yellow]:warning: EXPERIMENTAL :warning: [magenta]Writing lock file "
             )
-            # time.sleep(0.5)
+
             write_lock_file(name)
             console.print(
                 f"[bold green] :lock: Lock file generated [bold yellow]:warning: EXPERIMENTAL :warning:"

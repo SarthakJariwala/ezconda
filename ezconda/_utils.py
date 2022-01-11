@@ -37,10 +37,14 @@ def get_validate_file_name(env_name: str, file: Optional[str] = None) -> Optiona
         # first look for existing yml file
         if not Path(f"{env_name}.yml").is_file():
             console.print(f"[yellow]Couldn't locate {env_name}.yml")
-            console.print(dedent(f"""
+            console.print(
+                dedent(
+                    f"""
             [yellow]If your environment name and specifications file name are not the same,
             please provide the specifications file name to update using the '-f' or '--file' flag.
-            """))
+            """
+                )
+            )
             raise typer.Exit()
         else:
             file = Path(f"{env_name}.yml")
