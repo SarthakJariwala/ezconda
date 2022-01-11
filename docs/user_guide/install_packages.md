@@ -7,7 +7,7 @@
 <div class="termy">
 
 ```console
-ezconda install -n new-proj numpy pandas
+$ ezconda install -n new-proj numpy pandas
 
 // Installs numpy, pandas
 🚀 Installed packages in new-proj
@@ -73,7 +73,7 @@ To install packages from a specific channel, pass the `-c` or `--channel` flag w
 <div class="termy">
 
 ```console
-ezconda install -n new-proj -c conda-forge numpy pandas
+$ ezconda install -n new-proj -c conda-forge numpy pandas
 
 // Installs numpy, pandas from conda-forge channel
 ```
