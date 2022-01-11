@@ -40,6 +40,7 @@ nav:
   - User Guide:
     - Create new environment : "user_guide/create_new_env.md"
     - Install packages : "user_guide/install_packages.md"
+    - Remove packages : "user_guide/remove_packages.md"
   - License : "license.md"
 
 markdown_extensions:
