@@ -33,7 +33,7 @@ def test_recreate_wo_env_name(clean_up_env_after_test):
     env_name = lock_file.strip('.lock')
     envs_installed = json.load(os.popen("conda env list --json"))["envs"]
     if sys.platform == "darwin":
-        assert f"/usr/local/miniconda/{env_name}" in envs_installed
+        assert f"/usr/local/miniconda/envs/{env_name}" in envs_installed
     else:
         assert f"/opt/conda/envs/{env_name}" in envs_installed
 
@@ -62,7 +62,7 @@ def test_recreate_w_env_name(clean_up_env_after_test):
     # check if env is created
     envs_installed = json.load(os.popen("conda env list --json"))["envs"]
     if sys.platform == "darwin":
-        assert f"/usr/local/miniconda/{env_name}" in envs_installed
+        assert f"/usr/local/miniconda/envs/{env_name}" in envs_installed
     else:
         assert f"/opt/conda/envs/{env_name}" in envs_installed
 
