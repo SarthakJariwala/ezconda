@@ -23,7 +23,7 @@ jobs:
     - uses: addnab/docker-run-action@v3
       with:
         image: test-ezconda:latest
-        options: -v "$PWD/shared:/shared"
+        options: -v "${{ github.workspace }}/shared:/shared"
         run: mv coverage.txt shared
     
     - name: Download Code Coverage Uploader
