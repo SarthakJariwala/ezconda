@@ -34,6 +34,8 @@ def test_recreate_wo_env_name(clean_up_env_after_test):
     envs_installed = json.load(os.popen("conda env list --json"))["envs"]
     if sys.platform == "darwin":
         assert f"/usr/local/miniconda/envs/{env_name}" in envs_installed
+    elif sys.platform == "win32":
+        assert f"C:\\Miniconda\\envs\\{env_name}" in envs_installed
     else:
         assert f"/usr/share/miniconda/envs/{env_name}" in envs_installed
 
@@ -63,6 +65,8 @@ def test_recreate_w_env_name(clean_up_env_after_test):
     envs_installed = json.load(os.popen("conda env list --json"))["envs"]
     if sys.platform == "darwin":
         assert f"/usr/local/miniconda/envs/{env_name}" in envs_installed
+    elif sys.platform == "win32":
+        assert f"C:\\Miniconda\\envs\\{env_name}" in envs_installed
     else:
         assert f"/usr/share/miniconda/envs/{env_name}" in envs_installed
 
