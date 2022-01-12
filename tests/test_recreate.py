@@ -35,7 +35,7 @@ def test_recreate_wo_env_name(clean_up_env_after_test):
     if sys.platform == "darwin":
         assert f"/usr/local/miniconda/envs/{env_name}" in envs_installed
     else:
-        assert f"/opt/conda/envs/{env_name}" in envs_installed
+        assert f"/usr/share/miniconda/envs/{env_name}" in envs_installed
 
     # check if typer is installed in the env
     pkgs = json.load(os.popen(f"conda list -n {env_name} --json"))
@@ -64,7 +64,7 @@ def test_recreate_w_env_name(clean_up_env_after_test):
     if sys.platform == "darwin":
         assert f"/usr/local/miniconda/envs/{env_name}" in envs_installed
     else:
-        assert f"/opt/conda/envs/{env_name}" in envs_installed
+        assert f"/usr/share/miniconda/envs/{env_name}" in envs_installed
 
     # check if typer is installed in the env
     pkgs = json.load(os.popen(f"conda list -n {env_name} --json"))
