@@ -12,7 +12,7 @@ jobs:
     
     - name: Install Packages
       run: |
-        conda install -c conda-forge pip typer PyYaml pytest pytest-cov rich
+        $CONDA/bin/conda install -c conda-forge pip typer PyYaml pytest pytest-cov rich
         pip install . --no-deps
     
     - name: Run Tests
