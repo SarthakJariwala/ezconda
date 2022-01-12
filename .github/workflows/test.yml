@@ -13,28 +13,11 @@ jobs:
     - uses: s-weigand/setup-conda@v1
     
     - run: |
-        conda install -c conda-forge pip typer PyYaml pytest pytest-cov rich
+        conda install -c conda-forge pip typer PyYaml pytest pytest-cov codecov coverage rich
         pip install . --no-deps
     
     - name: Run Tests
       run: |
         pytest --cov=ezconda
-    
-    # - uses: docker/build-push-action@v2
-    #   with:
-    #       context: ./
-    #       file: ./Dockerfile
-    #       tags: test-ezconda:latest
-    #       push: false
-
-    # - uses: addnab/docker-run-action@v3
-    #   with:
-    #     image: test-ezconda:latest
-    #     options: -v "${{ github.workspace }}/shared:/shared"
-    #     run: mv coverage.txt shared
-    
-    # - name: Download Code Coverage Uploader
-    #   run: |
-    #     curl -Os https://uploader.codecov.io/latest/linux/codecov
-    #     chmod +x codecov
-    #     ./codecov
+        coverage xml
+        codecov

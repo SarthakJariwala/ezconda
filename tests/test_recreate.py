@@ -22,7 +22,7 @@ def test_recreate_wo_env_name(clean_up_env_after_test):
     )
 
     for file in os.listdir():
-        if file.endswith(".lock"):
+        if file.endswith(".lock") and file != "poetry.lock":
             lock_file = file
     result = runner.invoke(app, ["recreate", lock_file])
 
@@ -48,7 +48,7 @@ def test_recreate_w_env_name(clean_up_env_after_test):
     )
 
     for file in os.listdir():
-        if file.endswith(".lock"):
+        if file.endswith(".lock") and file != "poetry.lock":
             lock_file = file
     env_name = "test2"
     result = runner.invoke(app, ["recreate", lock_file, "-n", env_name])
