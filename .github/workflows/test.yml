@@ -7,10 +7,12 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
-    env:
-      ci_env: "bash <(curl -s https://codecov.io/env)"
     steps:
     - uses: actions/checkout@v2.3.4
+    
+    - name: Create 'shared' directory
+      run: mkdir shared
+    
     - uses: docker/build-push-action@v2
       with:
           context: ./
@@ -21,4 +23,11 @@ jobs:
     - uses: addnab/docker-run-action@v3
       with:
         image: test-ezconda:latest
-        options: $ci_env -e CI=true
+        options: -v "$PWD/shared:/shared"
+        run: mv coverage.txt shared
+    
+    - name: Download Code Coverage Uploader
+      run: |
+        curl -Os https://uploader.codecov.io/latest/linux/codecov
+        chmod +x codecov
+        ./codecov
