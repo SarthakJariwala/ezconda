@@ -10,9 +10,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2.3.4
     
-    - name: Install Packages
-      uses: s-weigand/setup-conda@v1
-      run: |
+    - uses: s-weigand/setup-conda@v1
+    
+    - run: |
         conda install -c conda-forge pip typer PyYaml pytest pytest-cov rich
         pip install . --no-deps
     
