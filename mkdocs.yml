@@ -42,6 +42,7 @@ nav:
     - Create new environment : "user_guide/create_new_env.md"
     - Install packages : "user_guide/install_packages.md"
     - Remove packages : "user_guide/remove_packages.md"
+    - Reproducible environment : "user_guide/recreate_env.md"
   - License : "license.md"
 
 markdown_extensions:
@@ -57,7 +58,8 @@ markdown_extensions:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_div_format
-  - pymdownx.tabbed
+  - pymdownx.tabbed:
+      alternate_style: true
 
 extra:
   social:
