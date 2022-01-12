@@ -1,6 +1,6 @@
 # EZconda
 
-![EZconda](docs/logo.png)
+![EZconda](https://github.com/SarthakJariwala/ezconda/blob/530510733a740bbbe495b68679dcce71c8bfc0e5/docs/logo.png)
 
 <p align="center">
     <a href="https://github.com/SarthakJariwala/ezconda/actions?workflow=Tests">
