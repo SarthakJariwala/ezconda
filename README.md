@@ -1,121 +1,54 @@
 # EZconda
 
-Create and manage your conda environments. Create reproducible environments. No manual file edits for configurations.
+![EZconda](logo.png)
 
-[![Tests](https://github.com/SarthakJariwala/ezconda/workflows/Tests/badge.svg)](https://github.com/SarthakJariwala/ezconda/actions?workflow=Tests)
-[![Codecov](https://codecov.io/gh/SarthakJariwala/ezconda/branch/master/graph/badge.svg)](https://codecov.io/gh/SarthakJariwala/ezconda)
-[![PyPI](https://img.shields.io/pypi/v/ezconda.svg)](https://pypi.org/project/ezconda/)
-[![Documentation Status](https://github.com/SarthakJariwala/ezconda/workflows/Docs/badge.svg)](https://ezconda.sarthakjariwala.com)
+<p align="center">
+    <a href="https://github.com/SarthakJariwala/ezconda/actions?workflow=Tests">
+        <img src="https://github.com/SarthakJariwala/ezconda/workflows/Tests/badge.svg">
+    </a>
+    <a href="https://codecov.io/gh/SarthakJariwala/ezconda">
+        <img src="https://codecov.io/gh/SarthakJariwala/ezconda/branch/main/graph/badge.svg">
+    </a>
+    <a href="https://pypi.org/project/ezconda/">
+        <img src="https://img.shields.io/pypi/v/ezconda.svg">
+    </a>
+    <a href="https://ezconda.sarthakjariwala.com">
+        <img src="https://github.com/SarthakJariwala/ezconda/workflows/Docs/badge.svg">
+    </a>
+</p>
+
+<p align="center">
+    <em><b>Create, Manage, Re-create</b> conda environments & specifications with ease.</em>
+</p>
+
+---
+
+**EZconda** is a command line interface application that helps practitioners to create and manage `conda` environment and related specifications with ease.
+
+## Key Features
+
+- **Environment specifications** : Add & remove packages from the <abbr title="commonly known as environment.yml file">specifications file</abbr> as you install & remove packages. _**No manual file edits!**_
+
+- **Environment management** : Create & manage `conda` environments with ease.
+
+- **Reproducible environments** : Lock current environment state and re-create it when necessary.
+
+- **Easy to use & intuitive** : It very closely mimics `conda` API, so there is no new API to learn for users. Autocomplete for all shells.
+
+- **Best practices built-in** : Enforces the user to follow best `conda` practices.
+
+## Requirements
+
+- Python 3.6+
+- [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html) installation
 
 ## Installation
 
-
-<div class="termy">
-
-```console
-$ pip install ezconda
----> 100%
-Successfully installed ezconda
-```
-
-</div>
-
-
-## Create New Conda Environment
-
-<div class="termy">
+The recommended way to install **EZconda** is using `conda` and in the `base` environment : 
 
 ```console
-// Create a new conda environment named 'ds-proj'
-// The only change is 'ezconda'
-$ ezconda create -n ds-proj python=3.9
-
-// Creates 'ds-proj' env and installs python=3.9
-Creating new conda environment : ds-proj ...
-Resolving packages...
-
-Done! You can activate it with :
-
-        $ conda activate ds-proj
-
-// Also creates a new YAML file with env specs
-Writing specifications to ds-proj.yml ...
-Created ds-proj.yml!
-
-// Generates a lock file for identical env builds
-Writing lock file... [EXPERIMENTAL]
-Done!
+$ conda install ezconda -c conda-forge
 ```
-</div>
-
-
-!!! Note
-    The only difference between from `ezconda` and `conda` commands that you type are the letters **`ez`**.
-
-<div class="termy">
-
-```console
-// Let's take a look at environment file generated
-
-$ cat ds-proj.yml
-
-// Contents of ds-proj.yml
-name: ds-proj
-channels:
-    - defaults
-dependencies:
-    - python=3.9
-
-// Amazing! We didn't have to manually edit or generate it!
-```
-
-</div>
-
-
-## Install Packages
-
-<div class="termy">
-
-```console
-// Install numpy in 'ds-proj' from 'conda-forge'
-$ ezconda install -n ds-proj -c conda-forge numpy
-
-Validating file, packages, channels...
-Installing packages...
-Installation complete!
-
-// Also updates environment YAML file
-Updating ds-proj.yml...
-Updated ds-proj.yml!
-
-// Updates lock file for identical env builds
-Writing lock file... [EXPERIMENTAL]
-Done!
-```
-</div>
-
-Let's take a look at the updated environment file
-
-<div class="termy">
-
-```console
-$ cat ds-proj.yml
-
-// Updated contents of ds-proj.yml
-name: ds-proj
-channels:
-    - defaults
-    - conda-forge
-dependencies:
-    - python=3.9
-    - numpy
-
-// It's updated! We didn't have to manually edit it!
-```
-</div>
-
-!!! Note
-    New packages (`numpy`) as well as channels (`conda-forge`) were added automatically to the `ds-proj.yml` file.
 
 ## Developing EZconda
 
