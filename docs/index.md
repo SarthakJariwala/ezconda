@@ -39,8 +39,7 @@
 
 ## Requirements
 
-- Python 3.6+
-- [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html) installation
+Requires a [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html) installation.
 
 ## Installation
 
@@ -55,3 +54,98 @@ Successfully installed ezconda
 ```
 
 </div>
+
+## A Minimal Example
+
+### Create a new environment
+
+Create a new environment with `Python 3.9` installed -
+
+<div class="termy">
+
+```console
+$ ezconda create -n ds-proj python=3.9
+```
+
+</div>
+
+**EZconda** creates the `conda` environment as well as a specifications file `ds-proj.yml` (named after the environment name) -
+
+```YAML title="ds-proj.yml" hl_lines="1 5" 
+name: ds-proj
+channel:
+    - defaults
+dependencies:
+    - python=3.9
+```
+
+### Install packages
+
+As you install packages, the specifications file is also updated accordingly.
+
+<div class="termy">
+
+```console
+$ ezconda install -n ds-proj -c conda-forge numpy pandas scipy
+// Installs numpy, scipy, pandas from conda-forge channel
+```
+
+</div>
+
+```YAML title="ds-proj.yml" hl_lines="3 7-9" 
+name: ds-proj
+channel:
+    - conda-forge
+    - defaults
+dependencies:
+    - python=3.9
+    - numpy
+    - pandas
+    - scipy
+```
+
+### Remove packages
+
+The specifications file is also updated when you remove packages.
+
+<div class="termy">
+
+```console
+$ ezconda remove -n ds-proj pandas
+// Removes pandas from ds-proj
+```
+
+</div>
+
+```YAML title="ds-proj.yml" hl_lines="7 8" 
+name: ds-proj
+channel:
+    - conda-forge
+    - defaults
+dependencies:
+    - python=3.9
+    - numpy
+    - scipy
+```
+
+### Recreate environment
+
+As you create, install and remove packages, in addition to the specifications file, **EZconda** also generates and maintains a lock file. You can use this lock file to reproducibly recreate an environment.
+
+<div class="termy">
+
+```console
+$ ezconda recreate -n new-env ds-proj-osx-64.lock
+
+// Creates a new environment 'new-env' that is identical to 'ds-proj'
+```
+</div>
+
+!!! Info "Lock file"
+    You can learn more about environment recreation in the [docs](/user_guide/recreate_env).
+
+## Summary
+
+In summary, **EZconda** creates a specifications file and a lock file for you as you create and manage your conda environment and packages.
+
+To learn more, check out the [User Guide](/user_guide/create_new_env)
