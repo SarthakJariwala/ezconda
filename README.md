@@ -9,8 +9,8 @@
     <a href="https://codecov.io/gh/SarthakJariwala/ezconda">
         <img src="https://codecov.io/gh/SarthakJariwala/ezconda/branch/main/graph/badge.svg">
     </a>
-    <a href="https://pypi.org/project/ezconda/">
-        <img src="https://img.shields.io/pypi/v/ezconda.svg">
+    <a href="https://anaconda.org/conda-forge/ezconda">
+        <img alt="Conda (channel only)" src="https://img.shields.io/conda/vn/conda-forge/ezconda">
     </a>
     <a href="https://ezconda.sarthakjariwala.com">
         <img src="https://github.com/SarthakJariwala/ezconda/workflows/Docs/badge.svg">
