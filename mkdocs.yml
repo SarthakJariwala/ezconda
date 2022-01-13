@@ -43,6 +43,7 @@ nav:
     - Install packages : "user_guide/install_packages.md"
     - Remove packages : "user_guide/remove_packages.md"
     - Reproducible environment : "user_guide/recreate_env.md"
+    - Autocomplete commands : "user_guide/autocomplete.md"
   - License : "license.md"
 
 markdown_extensions:
@@ -60,6 +61,7 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_div_format
   - pymdownx.tabbed:
       alternate_style: true
+  - pymdownx.keys
 
 extra:
   social:
