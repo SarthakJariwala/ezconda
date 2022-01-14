@@ -44,6 +44,7 @@ nav:
     - Remove packages : "user_guide/remove_packages.md"
     - Reproducible environment : "user_guide/recreate_env.md"
     - Autocomplete commands : "user_guide/autocomplete.md"
+  - Release Notes : "release_notes.md"
   - License : "license.md"
 
 markdown_extensions:
@@ -62,6 +63,9 @@ markdown_extensions:
   - pymdownx.tabbed:
       alternate_style: true
   - pymdownx.keys
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
 
 extra:
   social:
