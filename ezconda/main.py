@@ -11,7 +11,7 @@ from .recreate import recreate
 from .experimental.lock import lock
 
 
-app = typer.Typer(help="Conda environment and specifications lifecycle management")
+app = typer.Typer(help="Create, Manage, Re-create conda environments & specifications with ease")
 
 app.command()(create)
 app.command()(install)
