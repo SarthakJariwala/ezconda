@@ -18,9 +18,7 @@ def test_lock_for_existing_conda_envs():
                 "lock-test",
                 "python=3.9",
                 "-y",
-            ],
-            capture_output=True,
-            text=True,
+            ]
         )
     p = runner.invoke(app, ["lock", "-n", "lock-test"])
 
@@ -43,7 +41,12 @@ def test_lock_for_existing_conda_envs():
                 "-n",
                 "lock-test",
                 "-y",
-            ],
-            capture_output=True,
-            text=True,
+            ]
         )
+    
+    if sys.platform == "darwin":
+        subprocess.run(["rm", "-rf", "lock-test-osx-64.lock"])
+    elif sys.platform == "win32":
+        subprocess.run(["rm", "-rf", "lock-test-win-64.lock"])
+    elif sys.platform == "linux":
+        subprocess.run(["rm", "-rf", "lock-test-linux-64.lock"])
