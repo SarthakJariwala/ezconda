@@ -142,10 +142,10 @@ $ ezconda recreate -n new-env ds-proj-osx-64.lock
 </div>
 
 !!! Info "Lock file"
-    You can learn more about environment recreation in the [docs](/user_guide/recreate_env).
+    You can learn more about environment recreation in the [docs](user_guide/recreate_env.md).
 
 ## Summary
 
 In summary, **EZconda** creates a specifications file and a lock file for you as you create and manage your conda environment and packages.
 
-To learn more, check out the [User Guide](/user_guide/create_new_env)
+To learn more, check out the [User Guide](user_guide/create_new_env.md)
