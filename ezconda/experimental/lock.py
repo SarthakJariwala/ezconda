@@ -38,7 +38,9 @@ def lock(
     """
     Generate lock file for a conda environment
     """
-    with console.status(f"[yellow]:warning: EXPERIMENTAL :warning: [magenta]Writing lock file"):
+    with console.status(
+        f"[yellow]:warning: EXPERIMENTAL :warning: [magenta]Writing lock file"
+    ):
         write_lock_file(env_name)
         console.print(
             f"[bold green] :lock: Lock file generated for {env_name} [bold yellow]:warning: EXPERIMENTAL :warning:"

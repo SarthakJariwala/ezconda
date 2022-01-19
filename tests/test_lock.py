@@ -26,16 +26,7 @@ def test_lock_for_existing_conda_envs():
     assert "Lock file generated" in p.stdout
 
     files = os.listdir()
-    print(files)
-    # for f in files:
-    #     if f.endswith(".lock") and f != "poetry.lock":
-    #         if f.startswith(f"test-{sys.platform}"):
-    #             pass
-    #         elif f.startswith("test-osx-64"):
-    #             pass
-    #         else:
-    #             assert f.startswith("lock-test") == True
-    
+
     if sys.platform == "darwin":
         assert "lock-test-osx-64.lock" in files
     elif sys.platform == "win32":

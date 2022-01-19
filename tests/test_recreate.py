@@ -30,7 +30,7 @@ def test_recreate_wo_env_name(clean_up_env_after_test):
     assert f"Installed all dependencies from '{lock_file}'" in result.stdout
 
     # check if env is created
-    env_name = lock_file.strip('.lock')
+    env_name = lock_file.strip(".lock")
     envs_installed = json.load(os.popen("conda env list --json"))["envs"]
     if sys.platform == "darwin":
         assert f"/usr/local/miniconda/envs/{env_name}" in envs_installed
