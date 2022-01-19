@@ -8,6 +8,7 @@ from .create import create
 from .install import install
 from .remove import remove
 from .recreate import recreate
+from .experimental.lock import lock
 
 
 app = typer.Typer(help="Conda environment and specifications lifecycle management")
@@ -16,6 +17,7 @@ app.command()(create)
 app.command()(install)
 app.command()(remove)
 app.command()(recreate)
+app.command()(lock)
 # app.command()(show)
 
 
