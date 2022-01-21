@@ -1,5 +1,14 @@
 # Release Notes
 
+
+## :sparkles: **v0.2.0**
+
+Minor release with a new command - `lock`
+
+### :rocket: Features
+
+- New [`lock`](user_guide/lock_existing_env.md) command to generate a lock file for existing conda environments. See [docs](user_guide/lock_existing_env.md) for more information.
+
 ## :sparkles: **v0.1.0**
 
 This is the first public release of `ezconda`.
