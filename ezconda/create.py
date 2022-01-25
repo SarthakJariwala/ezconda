@@ -23,7 +23,9 @@ def create(
     channel: Optional[str] = typer.Option(
         None, "--channel", "-c", help="Additional channel to search for packages"
     ),
-    solver: Solver = typer.Option(Solver.mamba, help="Solver to use", case_sensitive=False),
+    solver: Solver = typer.Option(
+        Solver.mamba, help="Solver to use", case_sensitive=False
+    ),
     file: Optional[Path] = typer.Option(
         None, "--file", "-f", help="Name of the environment yml file"
     ),
@@ -64,7 +66,9 @@ def create(
     with console.status(f"[magenta]Creating new conda environment {name}") as status:
 
         if packages:
-            status.update(status=f"[magenta]Resolving & Installing packages using {solver.value}")
+            status.update(
+                status=f"[magenta]Resolving & Installing packages using {solver.value}"
+            )
 
         if not channel:
             p = subprocess.run(

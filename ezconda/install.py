@@ -32,7 +32,9 @@ def install(
     channel: Optional[str] = typer.Option(
         None, "--channel", "-c", help="Additional channel to search for packages"
     ),
-    solver: Solver = typer.Option(Solver.mamba, help="Solver to use", case_sensitive=False),
+    solver: Solver = typer.Option(
+        Solver.mamba, help="Solver to use", case_sensitive=False
+    ),
     verbose: Optional[bool] = typer.Option(
         False, "--verbose", "-v", help="Display standard output from conda"
     ),

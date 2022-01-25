@@ -8,7 +8,9 @@ from .console import console
 from .solver import Solver
 
 
-def read_lock_file_and_install(lock_file: Path, env_name: str, verbose: bool, solver: Solver) -> None:
+def read_lock_file_and_install(
+    lock_file: Path, env_name: str, verbose: bool, solver: Solver
+) -> None:
     """
     Reads lock file; identifies packages, their version number and build string and groups them by
     channel and attempts installation.
@@ -25,7 +27,9 @@ def read_lock_file_and_install(lock_file: Path, env_name: str, verbose: bool, so
         status.update(f"[magenta]Creating conda environment {env_name}")
 
         p = subprocess.run(
-            [f"{solver.value}", "create", "-n", env_name, "-y"], capture_output=True, text=True
+            [f"{solver.value}", "create", "-n", env_name, "-y"],
+            capture_output=True,
+            text=True,
         )
 
         # find the channels in the lock file
@@ -83,7 +87,9 @@ def recreate(
         "-n",
         help="Name of the environment to create",
     ),
-    solver: Solver = typer.Option(Solver.mamba, help="Solver to use", case_sensitive=False),
+    solver: Solver = typer.Option(
+        Solver.mamba, help="Solver to use", case_sensitive=False
+    ),
     verbose: Optional[bool] = typer.Option(
         False, "--verbose", "-v", help="Display standard output from conda"
     ),

@@ -29,7 +29,9 @@ def remove(
         prompt="Name of the environment to remove from",
         help="Name of the environment to uninstall package from",
     ),
-    solver: Solver = typer.Option(Solver.mamba, help="Solver to use", case_sensitive=False),
+    solver: Solver = typer.Option(
+        Solver.mamba, help="Solver to use", case_sensitive=False
+    ),
     file: Optional[str] = typer.Option(
         None, "--file", "-f", help="'.yml' file to update with removed packages"
     ),
