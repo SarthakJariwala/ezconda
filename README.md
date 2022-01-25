@@ -23,7 +23,7 @@
 
 ---
 
-**EZconda** is a command line interface application that helps practitioners to create and manage `conda` environment and related specifications with ease.
+**EZconda** is a command line interface application that helps practitioners create and manage `conda` environment and related specifications with ease.
 
 ## Key Features
 
@@ -35,22 +35,33 @@
 
 - **Easy to use & intuitive** : It very closely mimics `conda` API, so there is no new API to learn for users. Autocomplete for all shells.
 
+- **Fast & Reliable Environment resolution** : Get fast and reliable environment solves by default. *EZconda* uses `mamba` by default, but you can easily switch between `mamba` and `conda`.
+
 - **Best practices built-in** : Enforces the user to follow best `conda` practices.
 
 ## Requirements
 
-- Python 3.6+
 - [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html) installation
 
 ## Installation
 
-The recommended way to install **EZconda** is using `conda` and in the `base` environment : 
+The recommended way to install **EZconda** is using `conda` or `mamba` in the `base` environment : 
+
+### Using `conda`: 
 
 ```console
-$ conda install ezconda -c conda-forge
+$ conda install ezconda -c conda-forge -n base
 ```
 
-## Developing EZconda
+### Using `mamba`:
+
+```console
+$ mamba install ezconda -c conda-forge -n base
+```
+
+## Contributing Guidelines
+
+<!-- TODO Add contributing guidelines -->
 
 ### Run tests
 
