@@ -5,9 +5,10 @@ from typing import Optional
 from pathlib import Path
 
 from .console import console
+from .solver import Solver
 
 
-def read_lock_file_and_install(lock_file: Path, env_name: str, verbose: bool) -> None:
+def read_lock_file_and_install(lock_file: Path, env_name: str, verbose: bool, solver: Solver) -> None:
     """
     Reads lock file; identifies packages, their version number and build string and groups them by
     channel and attempts installation.
@@ -24,7 +25,7 @@ def read_lock_file_and_install(lock_file: Path, env_name: str, verbose: bool) ->
         status.update(f"[magenta]Creating conda environment {env_name}")
 
         p = subprocess.run(
-            ["conda", "create", "-n", env_name, "-y"], capture_output=True, text=True
+            [f"{solver.value}", "create", "-n", env_name, "-y"], capture_output=True, text=True
         )
 
         # find the channels in the lock file
@@ -43,7 +44,7 @@ def read_lock_file_and_install(lock_file: Path, env_name: str, verbose: bool) ->
 
             p = subprocess.run(
                 [
-                    "conda",
+                    f"{solver.value}",
                     "install",
                     "-n",
                     env_name,
@@ -82,6 +83,7 @@ def recreate(
         "-n",
         help="Name of the environment to create",
     ),
+    solver: Solver = typer.Option(Solver.mamba, help="Solver to use", case_sensitive=False),
     verbose: Optional[bool] = typer.Option(
         False, "--verbose", "-v", help="Display standard output from conda"
     ),
@@ -93,7 +95,7 @@ def recreate(
         if Path(file).is_file():
             if name is None:  # pragma: no cover
                 name = Path(file).stem
-            read_lock_file_and_install(file, name, verbose)
+            read_lock_file_and_install(file, name, verbose, solver)
         else:
             console.print(f"[bold red]{file} is not a valid file")
             raise typer.Exit()

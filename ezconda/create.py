@@ -7,6 +7,7 @@ from conda.cli.python_api import run_command
 
 from .console import console
 from ._utils import create_initial_env_specs, write_env_file
+from .solver import Solver
 from .experimental import write_lock_file
 
 
@@ -22,6 +23,7 @@ def create(
     channel: Optional[str] = typer.Option(
         None, "--channel", "-c", help="Additional channel to search for packages"
     ),
+    solver: Solver = typer.Option(Solver.mamba, help="Solver to use", case_sensitive=False),
     file: Optional[Path] = typer.Option(
         None, "--file", "-f", help="Name of the environment yml file"
     ),
@@ -62,11 +64,11 @@ def create(
     with console.status(f"[magenta]Creating new conda environment {name}") as status:
 
         if packages:
-            status.update(status="[magenta]Resolving & Installing packages")
+            status.update(status=f"[magenta]Resolving & Installing packages using {solver.value}")
 
         if not channel:
             p = subprocess.run(
-                ["conda", "create", "-n", name, *packages, "-y"],
+                [f"{solver.value}", "create", "-n", name, *packages, "-y"],
                 capture_output=True,
                 text=True,
             )
@@ -74,7 +76,7 @@ def create(
         else:
             p = subprocess.run(
                 [
-                    "conda",
+                    f"{solver.value}",
                     "create",
                     "-n",
                     name,

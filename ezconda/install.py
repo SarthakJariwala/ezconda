@@ -13,6 +13,7 @@ from ._utils import (
     write_env_file,
     add_new_channel_to_env_specs,
 )
+from .solver import Solver
 from .experimental import write_lock_file
 
 
@@ -31,6 +32,7 @@ def install(
     channel: Optional[str] = typer.Option(
         None, "--channel", "-c", help="Additional channel to search for packages"
     ),
+    solver: Solver = typer.Option(Solver.mamba, help="Solver to use", case_sensitive=False),
     verbose: Optional[bool] = typer.Option(
         False, "--verbose", "-v", help="Display standard output from conda"
     ),
@@ -50,18 +52,18 @@ def install(
         env_specs = add_pkg_to_dependencies(env_specs, pkg_name)
         env_specs = add_new_channel_to_env_specs(env_specs, channel)
 
-        status.update("[magenta]Resolving & Installing packages")
+        status.update(f"[magenta]Resolving & Installing packages using {solver.value}")
 
         if not channel:
             p = subprocess.run(
-                ["conda", "install", "-n", env_name, *pkg_name, "-y"],
+                [f"{solver.value}", "install", "-n", env_name, *pkg_name, "-y"],
                 capture_output=True,
                 text=True,
             )
         else:
             p = subprocess.run(
                 [
-                    "conda",
+                    f"{solver.value}",
                     "install",
                     "-n",
                     env_name,
