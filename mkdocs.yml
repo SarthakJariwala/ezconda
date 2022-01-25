@@ -40,7 +40,6 @@ nav:
   - Installation : "installation.md"
   - User Guide:
     - Create new environment : "user_guide/create_new_env.md"
-    - Install packages : "user_guide/install_packages.md"
     - Remove packages : "user_guide/remove_packages.md"
     - Reproducible environment : "user_guide/recreate_env.md"
     - Lock file for any environment : "user_guide/lock_existing_env.md"
