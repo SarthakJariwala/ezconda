@@ -18,8 +18,8 @@ def test_create_without_install(clean_up_env_after_test):
 
 
 @pytest.mark.usefixtures("clean_up_env_after_test")
-def test_verbose(clean_up_env_after_test):
-    result = runner.invoke(app, ["create", "-n", "test", "-v"])
+def test_verbose_w_conda(clean_up_env_after_test):
+    result = runner.invoke(app, ["create", "-n", "test", "-v", "--solver", "conda"])
 
     assert Path("test.yml").is_file()
     # from conda
