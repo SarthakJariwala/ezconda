@@ -4,7 +4,7 @@ import subprocess
 import yaml
 import typer
 from pathlib import Path
-from typing import Optional, Dict, List
+from typing import Iterable, Optional, Dict, List, Union
 from textwrap import dedent
 
 from .console import console
@@ -15,7 +15,7 @@ def create_initial_env_specs(
 ) -> Dict:
     """Create initial environment specifications that will be written to 'yml' file."""
 
-    env_specs = {}
+    env_specs : Dict[str, Union[str, List[str]]] = {}
     env_specs.update({"name": env_name})
     if channel:
         env_specs.update({"channels": [channel, "defaults"]})
@@ -26,7 +26,7 @@ def create_initial_env_specs(
     return env_specs
 
 
-def get_validate_file_name(env_name: str, file: Optional[str] = None) -> Optional[str]:
+def get_validate_file_name(env_name: str, file: Optional[Path] = None) -> Optional[Path]:
     """
     Looks for a '.yml' file with the `env_name` specified. If file cannot
     be located, prompt will ask for the file name. If the file provided does
@@ -50,7 +50,7 @@ def get_validate_file_name(env_name: str, file: Optional[str] = None) -> Optiona
             file = Path(f"{env_name}.yml")
     # validate the file that the user provides
     else:
-        if not Path(file).is_file():
+        if not file.is_file():
             console.print(f"[magenta]Could not locate '{file}'")
             raise typer.Exit()
     return file
@@ -103,12 +103,12 @@ def add_pkg_to_dependencies(env_specs: Dict, pkg_name: List[str]) -> Dict:
     return env_specs
 
 
-def add_new_channel_to_env_specs(env_specs: Dict, channel: Optional[str]) -> Dict:
+def add_new_channel_to_env_specs(env_specs: Dict[str, Union[str, List[str]]], channel: Optional[str]) -> Dict:
     """Add new channel to the environment specifications, if it does not exist."""
 
     # this should always return ["defaults"] atleast!
     if channel:
-        existing_channels = list(env_specs.get("channels"))
+        existing_channels = list(env_specs["channels"])
         if existing_channels and channel not in existing_channels:
             existing_channels.append(channel)
             env_specs["channels"] = existing_channels
@@ -188,7 +188,7 @@ def recheck_dependencies(env_specs: Dict, env_name: str) -> Dict:
     deps = env_specs["dependencies"]  # this may have dependencies with ">,<,=" symbols
     deps_re = [re.findall(r"\w+", d)[0] for d in deps]  # removing the symbols
 
-    rem_pkgs_to_be_removed_from_yml = set(deps_re) - all_pkgs
+    rem_pkgs_to_be_removed_from_yml = list(set(deps_re) - all_pkgs)
     if rem_pkgs_to_be_removed_from_yml:
         if "python" in rem_pkgs_to_be_removed_from_yml:
             rem_pkgs_to_be_removed_from_yml.remove("python")

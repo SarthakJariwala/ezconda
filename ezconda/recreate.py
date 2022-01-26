@@ -9,7 +9,7 @@ from .solver import Solver
 
 
 def read_lock_file_and_install(
-    lock_file: Path, env_name: str, verbose: bool, solver: Solver
+    lock_file: Path, env_name: str, solver: Solver, verbose: Optional[bool] = False
 ) -> None:
     """
     Reads lock file; identifies packages, their version number and build string and groups them by
@@ -78,7 +78,7 @@ def read_lock_file_and_install(
 
 
 def recreate(
-    file: str = typer.Argument(
+    file: Path = typer.Argument(
         ..., help="Lock file to use to re-create an environment"
     ),
     name: Optional[str] = typer.Option(
@@ -98,10 +98,10 @@ def recreate(
     Re-create an environment from lock file.
     """
     if file:
-        if Path(file).is_file():
+        if file.is_file():
             if name is None:  # pragma: no cover
-                name = Path(file).stem
-            read_lock_file_and_install(file, name, verbose, solver)
+                name = file.stem
+            read_lock_file_and_install(file, name, solver, verbose)
         else:
             console.print(f"[bold red]{file} is not a valid file")
             raise typer.Exit()
