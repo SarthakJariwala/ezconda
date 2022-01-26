@@ -1,6 +1,29 @@
 # Release Notes
 
 
+## :sparkles: **v0.3.0**
+
+### :rocket: Features
+
+- New option to select between `conda` and `mamba` solvers using `--solver` option.
+
+<div class="termy">
+
+```console
+$ ezconda install -n env numpy --solver mamba
+// Resolves environment using mamba
+```
+
+</div>
+
+- Default solver is now set to `mamba`
+
+### :book: Documentation
+
+- Update installation instructions
+
+---
+
 ## :sparkles: **v0.2.0**
 
 Minor release with a new command - `lock`
@@ -8,6 +31,8 @@ Minor release with a new command - `lock`
 ### :rocket: Features
 
 - New [`lock`](user_guide/lock_existing_env.md) command to generate a lock file for existing conda environments. See [docs](user_guide/lock_existing_env.md) for more information.
+
+---
 
 ## :sparkles: **v0.1.0**
 
