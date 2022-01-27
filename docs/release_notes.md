@@ -1,6 +1,23 @@
 # Release Notes
 
 
+## :sparkles: **v0.3.1**
+
+### :beetle: Fix
+
+- `ezconda version` now shows the correct version string.
+
+<div class="termy">
+
+```console
+$ ezconda version
+0.3.1
+```
+
+</div>
+
+---
+
 ## :sparkles: **v0.3.0**
 
 ### :rocket: Features
