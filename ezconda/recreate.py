@@ -6,6 +6,7 @@ from pathlib import Path
 
 from .console import console
 from .solver import Solver
+from .config import get_default_solver
 
 
 def read_lock_file_and_install(
@@ -87,9 +88,7 @@ def recreate(
         "-n",
         help="Name of the environment to create",
     ),
-    solver: Solver = typer.Option(
-        Solver.mamba, help="Solver to use", case_sensitive=False
-    ),
+    solver: Solver = typer.Option(None, help="Solver to use", case_sensitive=False),
     verbose: Optional[bool] = typer.Option(
         False, "--verbose", "-v", help="Display standard output from conda"
     ),
@@ -101,6 +100,8 @@ def recreate(
         if Path(file).is_file():
             if name is None:  # pragma: no cover
                 name = Path(file).stem
+            if solver is None:
+                solver = get_default_solver()
             read_lock_file_and_install(file, name, verbose, solver)
         else:
             console.print(f"[bold red]{file} is not a valid file")
