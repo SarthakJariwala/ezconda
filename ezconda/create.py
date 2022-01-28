@@ -9,6 +9,7 @@ from .console import console
 from ._utils import create_initial_env_specs, write_env_file
 from .solver import Solver
 from .experimental import write_lock_file
+from .config import get_default_solver
 
 
 def create(
@@ -23,9 +24,7 @@ def create(
     channel: Optional[str] = typer.Option(
         None, "--channel", "-c", help="Additional channel to search for packages"
     ),
-    solver: Solver = typer.Option(
-        Solver.mamba, help="Solver to use", case_sensitive=False
-    ),
+    solver: Solver = typer.Option(None, help="Solver to use", case_sensitive=False),
     file: Optional[Path] = typer.Option(
         None, "--file", "-f", help="Name of the environment yml file"
     ),
@@ -62,6 +61,9 @@ def create(
         console.print(f"[bold yellow]Overwrite {file} ...")
 
     env_specs = create_initial_env_specs(name, channel, packages)
+
+    if solver is None:
+        solver = get_default_solver()
 
     with console.status(f"[magenta]Creating new conda environment {name}") as status:
 

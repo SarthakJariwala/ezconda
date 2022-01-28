@@ -14,6 +14,7 @@ from ._utils import (
     add_new_channel_to_env_specs,
 )
 from .solver import Solver
+from .config import get_default_solver
 from .experimental import write_lock_file
 
 
@@ -32,9 +33,7 @@ def install(
     channel: Optional[str] = typer.Option(
         None, "--channel", "-c", help="Additional channel to search for packages"
     ),
-    solver: Solver = typer.Option(
-        Solver.mamba, help="Solver to use", case_sensitive=False
-    ),
+    solver: Solver = typer.Option(None, help="Solver to use", case_sensitive=False),
     verbose: Optional[bool] = typer.Option(
         False, "--verbose", "-v", help="Display standard output from conda"
     ),
@@ -53,6 +52,9 @@ def install(
         env_specs = read_env_file(file)
         env_specs = add_pkg_to_dependencies(env_specs, pkg_name)
         env_specs = add_new_channel_to_env_specs(env_specs, channel)
+
+        if solver is None:
+            solver = get_default_solver()
 
         status.update(f"[magenta]Resolving & Installing packages using {solver.value}")
 
