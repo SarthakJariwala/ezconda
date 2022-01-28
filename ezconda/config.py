@@ -33,6 +33,8 @@ def check_configs(
 def make_and_read_config_file(
     app_dir: str = app_dir, config_file: Path = config_file
 ) -> Dict:
+    """Create config file if it doesn't exist and return empty dict of configs.
+    If one exists, read it and return a dict of configs."""
 
     # create app directory if it doesn't exist
     if not Path(app_dir).is_dir():
