@@ -1,3 +1,4 @@
+from distutils.command.config import config
 import typer
 
 from . import __version__
@@ -8,6 +9,7 @@ from .create import create
 from .install import install
 from .remove import remove
 from .recreate import recreate
+from .config import config
 from .experimental.lock import lock
 
 
@@ -20,6 +22,7 @@ app.command()(install)
 app.command()(remove)
 app.command()(recreate)
 app.command()(lock)
+app.command()(config)
 # app.command()(show)
 
 
