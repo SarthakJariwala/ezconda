@@ -91,5 +91,5 @@ def config(
         json.dump(configs, f)
 
     if show:
-        console.rule(f"[bold green]Current Configuration")
-        console.print_json(data=configs)
+            console.print(f"[bold green]Current Configuration")
+            console.print_json(data=configs)
