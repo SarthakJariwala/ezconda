@@ -11,7 +11,7 @@ from ezconda.main import app
 runner = CliRunner()
 
 app_dir = typer.get_app_dir("ezconda")
-config_file: Path = Path(app_dir) / "config.json"
+config_file: Path = Path(app_dir) / "config.toml"
 
 
 @pytest.mark.usefixtures("delete_config_file")

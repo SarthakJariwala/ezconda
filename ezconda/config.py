@@ -1,7 +1,7 @@
 import typer
 from pathlib import Path
-import json
 from typing import Optional, Dict
+import tomlkit
 
 from .solver import Solver
 
@@ -10,7 +10,7 @@ from .console import console
 
 # get ezconda config file
 app_dir = typer.get_app_dir("ezconda")
-config_file: Path = Path(app_dir) / "config.json"
+config_file: Path = Path(app_dir) / "config.toml"
 
 
 def check_configs(
@@ -26,7 +26,7 @@ def check_configs(
         # check if config file exists
         if config_file.is_file():
             with open(config_file, "r") as f:
-                configs = json.load(f)
+                configs = tomlkit.load(f)
             return configs
 
 
@@ -48,7 +48,7 @@ def make_and_read_config_file(
 
     else:
         with open(config_file, "r") as f:
-            configs = json.load(f)
+            configs = tomlkit.load(f)
 
     return configs
 
@@ -88,7 +88,7 @@ def config(
         configs.update({"solver": solver})
 
     with open(config_file, "w") as f:
-        json.dump(configs, f)
+        tomlkit.dump(configs, f)
 
     if show:
         console.print(f"[bold green]Current Configuration")
