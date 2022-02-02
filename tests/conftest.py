@@ -24,7 +24,7 @@ def clean_up_env_after_test():
 @pytest.fixture()
 def delete_config_file():
     app_dir = typer.get_app_dir("ezconda")
-    config_file: Path = Path(app_dir) / "config.json"
+    config_file: Path = Path(app_dir) / "config.toml"
     yield
     """Remove config file after each test runs"""
     subprocess.run(["rm", "-rf", config_file])
