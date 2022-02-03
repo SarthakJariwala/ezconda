@@ -28,11 +28,11 @@ def test_lock_for_existing_conda_envs():
     files = os.listdir()
 
     if sys.platform == "darwin":
-        assert "lock-test-osx-64.lock" in files
+        assert "lock-test-darwin-x86_64.lock" in files
     elif sys.platform == "win32":
-        assert "lock-test-win-64.lock" in files
+        assert "lock-test-win-x86_64.lock" in files
     else:
-        assert "lock-test-linux-64.lock" in files
+        assert "lock-test-linux-x86_64.lock" in files
 
     subprocess.run(
         [
