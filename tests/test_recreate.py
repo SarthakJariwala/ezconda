@@ -13,7 +13,7 @@ runner = CliRunner()
 def test_recreate_env_with_not_a_file(clean_up_env_after_test):
     result = runner.invoke(app, ["recreate", "non_existing_file"])
 
-    assert "non_existing_file is not a valid file" in result.stdout
+    assert "Lock file provided does not exist" in result.stdout
 
 
 @pytest.mark.usefixtures("clean_up_env_after_test")
@@ -27,11 +27,12 @@ def test_recreate_wo_env_name(clean_up_env_after_test):
             lock_file = file
     result = runner.invoke(app, ["recreate", lock_file])
 
-    assert f"Installed all dependencies from '{lock_file}'" in result.stdout
+    assert f" 🚀 Recreated 'test' environment from lock file" in result.stdout
 
     # check if env is created
     env_name = lock_file.strip(".lock")
     envs_installed = json.load(os.popen("conda env list --json"))["envs"]
+    
     if sys.platform == "darwin":
         assert f"/usr/local/miniconda/envs/{env_name}" in envs_installed
     elif sys.platform == "win32":
@@ -59,7 +60,7 @@ def test_recreate_w_env_name(clean_up_env_after_test):
     env_name = "test2"
     result = runner.invoke(app, ["recreate", lock_file, "-n", env_name])
 
-    assert f"Installed all dependencies from '{lock_file}'" in result.stdout
+    assert f" 🚀 Recreated '{env_name}' environment from lock file" in result.stdout
 
     # check if env is created
     envs_installed = json.load(os.popen("conda env list --json"))["envs"]

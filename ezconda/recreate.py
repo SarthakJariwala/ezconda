@@ -1,61 +1,64 @@
 import subprocess
+import tempfile
 import typer
-import json
 from typing import Optional
 from pathlib import Path
 
 from .console import console
 from .solver import Solver
 from .config import get_default_solver
+from .files.lockfile import LockFile
 
 
 def read_lock_file_and_install(
-    lock_file: Path, env_name: str, verbose: bool, solver: Solver
+    lock_file: Path,
+    solver: Solver,
+    verbose: bool,
+    env_name: Optional[str] = None,
 ) -> None:
     """
-    Reads lock file; identifies packages, their version number and build string and groups them by
-    channel and attempts installation.
-
-    If errors are encountered during installation, user is informed.
+    Reads lock file, verifies the content and creates a new environment
+    with packages specifed in the lock file.
     """
 
     with console.status(f"[magenta]Reading lock file") as status:
 
-        with open(lock_file, "r") as f:
-            complete_spec = json.load(f)
+        l = LockFile()
+        complete_specs = l.read_lock_file(lock_file)
 
-        # only create environment if lock file load is successful
-        status.update(f"[magenta]Creating conda environment {env_name}")
+        l.verify_lock_file_contents(complete_specs)
 
-        p = subprocess.run(
-            [f"{solver.value}", "create", "-n", env_name, "-y"],
-            capture_output=True,
-            text=True,
-        )
+        if env_name is None:
+            env_name = complete_specs["environment"]["name"]
 
-        # find the channels in the lock file
-        channels = list(set([d["channel"] for d in complete_spec]))
+        explicit_specs = [
+            f"{pkg['base_url']}/{pkg['platform']}/{pkg['dist_name']}"
+            for pkg in complete_specs["packages"]
+            if not pkg["channel"].startswith("pypi")
+        ]
 
-        for channel in channels:
-            # get package-version-build for packages from a channel
-            status.update(f"[magenta]Collecting packages for channel : {channel}")
+        explicit_specs = [
+            spec + ".conda"
+            if spec.startswith("https://repo.anaconda.com")
+            else spec + ".tar.bz2"
+            for spec in explicit_specs
+        ]
 
-            pvb = [
-                f"{d['name']}={d['version']}={d['build_string']}"
-                for d in complete_spec
-                if d["channel"] == channel
-            ]
-            status.update(f"[magenta]Installing packages for channel : {channel}")
+        with tempfile.NamedTemporaryFile() as f:
+            f.write(bytes("@EXPLICIT\n", "utf-8"))
+            f.writelines([bytes(specs + "\n", "utf-8") for specs in explicit_specs])
+            f.flush()
+
+            status.update(f"[magenta]Creating new conda environment {env_name}")
 
             p = subprocess.run(
                 [
                     f"{solver.value}",
-                    "install",
+                    "create",
                     "-n",
                     env_name,
-                    *pvb,
-                    "-c",
-                    channel,
+                    "--file",
+                    f"{f.name}",
                     "-y",
                 ],
                 capture_output=True,
@@ -69,17 +72,15 @@ def read_lock_file_and_install(
                 console.print("[red]" + str(p.stdout + p.stderr))
                 raise typer.Exit()
 
-            console.print(
-                f"[bold green] :rocket: Installed all packages from channel : {channel}",
-            )
+        # TODO: Add installation for pypi channels/packages
 
         console.print(
-            f"[bold green] :star: Installed all dependencies from '{lock_file}'!"
+            f"[bold green] :rocket: Recreated '{env_name}' environment from lock file",
         )
 
 
 def recreate(
-    file: str = typer.Argument(
+    file: Path = typer.Argument(
         ..., help="Lock file to use to re-create an environment"
     ),
     name: Optional[str] = typer.Option(
@@ -94,15 +95,11 @@ def recreate(
     ),
 ):
     """
-    Re-create an environment from lock file.
+    Re-create an environment from lock file. This will install all the packages
+    specified in the lock file, if the system and platform match lock file.
     """
-    if file:
-        if Path(file).is_file():
-            if name is None:  # pragma: no cover
-                name = Path(file).stem
-            if solver is None:
-                solver = get_default_solver()
-            read_lock_file_and_install(file, name, verbose, solver)
-        else:
-            console.print(f"[bold red]{file} is not a valid file")
-            raise typer.Exit()
+
+    if solver is None:
+        solver = get_default_solver()
+
+    read_lock_file_and_install(file, solver, verbose, name)

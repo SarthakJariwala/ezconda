@@ -117,13 +117,8 @@ def remove(
         console.print(f"[bold green] :floppy_disk: Updated specifications in '{file}'")
 
         if lock:
-            status.update(
-                f"[yellow]:warning: EXPERIMENTAL :warning: [magenta]Writing lock file "
-            )
+            status.update(f"[magenta]Writing lock file")
 
             write_lock_file(env_name)
-            console.print(
-                f"[bold green] :lock: Lock file updated [bold yellow]:warning: EXPERIMENTAL :warning:"
-            )
 
         console.print(f"[bold green] :star: Done!")
