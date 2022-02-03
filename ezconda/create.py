@@ -111,13 +111,8 @@ def create(
         if (
             lock and packages
         ):  # only write lock file if packages are mentioned during env creation
-            status.update(
-                f"[yellow]:warning: EXPERIMENTAL :warning: [magenta]Writing lock file "
-            )
+            status.update(f"[magenta]Writing lock file")
 
             write_lock_file(name)
-            console.print(
-                f"[bold green] :lock: Lock file generated [bold yellow]:warning: EXPERIMENTAL :warning:"
-            )
 
         console.print(f"[bold green] :star: Done!")

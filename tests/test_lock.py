@@ -23,7 +23,7 @@ def test_lock_for_existing_conda_envs():
     )
     p = runner.invoke(app, ["lock", "-n", "lock-test"])
 
-    assert "Lock file generated" in p.stdout
+    assert " 🔒 Lock file" in p.stdout
 
     files = os.listdir()
 
