@@ -30,7 +30,7 @@ def test_recreate_wo_env_name(clean_up_env_after_test):
     assert f" 🚀 Recreated 'test' environment from lock file" in result.stdout
 
     # check if env is created
-    env_name = lock_file.strip(".lock")
+    env_name = "test"  # env name is taken from the lock file
     envs_installed = json.load(os.popen("conda env list --json"))["envs"]
     
     if sys.platform == "darwin":
