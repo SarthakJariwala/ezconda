@@ -1,6 +1,7 @@
 import subprocess
 import os
 import sys
+import platform
 import pytest
 from typer.testing import CliRunner
 from pathlib import Path
@@ -27,13 +28,8 @@ def test_lock_for_existing_conda_envs():
 
     files = os.listdir()
 
-    if sys.platform == "darwin":
-        assert "lock-test-darwin-x86_64.lock" in files
-    elif sys.platform == "win32":
-        assert "lock-test-win32-x86_64.lock" in files
-    else:
-        assert "lock-test-linux-x86_64.lock" in files
-
+    assert f"lock-test-{sys.platform}-{platform.machine()}.lock" in files
+    
     subprocess.run(
         [
             "conda",
@@ -45,9 +41,4 @@ def test_lock_for_existing_conda_envs():
         ]
     )
 
-    if sys.platform == "darwin":
-        subprocess.run(["rm", "-rf", "lock-test-darwin-x86_64.lock"])
-    elif sys.platform == "win32":
-        subprocess.run(["rm", "-rf", "lock-test-win32-x86_64.lock"])
-    elif sys.platform == "linux":
-        subprocess.run(["rm", "-rf", "lock-test-linux-x86_64.lock"])
+    subprocess.run(["rm", "-rf", f"lock-test-{sys.platform}-{platform.machine()}.lock"])
