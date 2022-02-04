@@ -27,7 +27,7 @@ def test_recreate_wo_env_name(clean_up_env_after_test):
             lock_file = file
     result = runner.invoke(app, ["recreate", lock_file])
 
-    assert f" 🚀 Recreated 'test' environment from lock file" in result.stdout
+    assert f"Recreated 'test' environment from lock file" in result.stdout
 
     # check if env is created
     env_name = "test"  # env name is taken from the lock file
@@ -60,7 +60,7 @@ def test_recreate_w_env_name(clean_up_env_after_test):
     env_name = "test2"
     result = runner.invoke(app, ["recreate", lock_file, "-n", env_name])
 
-    assert f" 🚀 Recreated '{env_name}' environment from lock file" in result.stdout
+    assert f"Recreated '{env_name}' environment from lock file" in result.stdout
 
     # check if env is created
     envs_installed = json.load(os.popen("conda env list --json"))["envs"]
