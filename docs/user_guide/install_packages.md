@@ -16,7 +16,7 @@ $ ezconda install -n new-proj numpy pandas
 💾 Updated specifications to 'new-proj.yml'
 
 // Updates lock file with new packages
-🔒 Lock file updated ⚠ EXPERIMENTAL ⚠
+🔒 Lock file updated
 ⭐ Done!
 ```
 </div>
@@ -48,23 +48,26 @@ However, the lock file contains `libopenblas` and all other dependencies of `num
 
 Check it:
 
-```JSON title="new-proj lock file"
-{
+```TOML title="new-proj lock file"
+[[packages]]
 ...
-    "dist_name": "libopenblas-0.3.13-hf4835c0_1",
-    "name": "libopenblas",
+dist_name = "libopenblas-0.3.13-hf4835c0_1"
+name = "libopenblas"
+
+[[packages]]
 ...
-    "dist_name": "numpy-1.21.2-py39h6fc94f6_0",
-    "name": "numpy",
+dist_name = "numpy-1.21.2-py39h6fc94f6_0"
+name = "numpy"
+
+[[packages]]
 ...
-    "dist_name": "numpy-base-1.21.2-py39h6ba5a95_0",
-    "name": "numpy-base",
+dist_name = "numpy-base-1.21.2-py39h6ba5a95_0"
+name = "numpy-base"
 ...
-}
 ```
 
 !!! Tip
-    You will learn more about these differences later in the docs.
+    You can learn more about these differences and lock file [here](../design_decisions/lockfile.md).
 
 ## From specific channel
 

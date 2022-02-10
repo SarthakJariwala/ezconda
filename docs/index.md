@@ -27,17 +27,21 @@
 
 ## Key Features
 
-- **Environment specifications** : Add & remove packages from the <abbr title="commonly known as environment.yml file">specifications file</abbr> as you install & remove packages. _**No manual file edits!**_
+- **Environment Management** : Create and manage `conda` environments with ease.
 
-- **Environment management** : Create & manage `conda` environments with ease.
+- **Environment Specifications** : Add and remove packages from the <abbr title="commonly known as environment.yml file">specifications file</abbr> as you install & remove them.
+    
+    > _**No manual file edits! No exporting entire environments!**_
 
-- **Reproducible environments** : Lock current environment state and re-create it when necessary.
+- **Reproducible Environments** : Auto lock current environment state and re-create it anywhere.
 
-- **Easy to use & intuitive** : It very closely mimics `conda` API, so there is no new API to learn for users. Autocomplete for all shells.
+- **Fast & Reliable Environment Resolution** : Get fast and reliable environment solves by default.
 
-- **Fast & Reliable Environment resolution** : Get fast and reliable environment solves by default. *EZconda* uses `mamba` by default, but you can easily switch between `mamba` and `conda`.
+    > *EZconda* uses `mamba` by default, but you can easily switch between `mamba` and `conda`.
 
-- **Best practices built-in** : Enforces the user to follow best `conda` practices.
+- **Easy & Intuitive** : Intuitive commands and autocompletions by default.
+
+- **Built-in Best Practices** : Forces the user to follow best `conda` practices.
 
 ## Requirements
 
@@ -47,7 +51,7 @@ Requires a [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/ins
 
 The recommended way to install **EZconda** is using `conda` or `mamba` in the `base` environment : 
 
-### Using `conda`: 
+### Using `conda`
 
 <div class="termy">
 
@@ -59,7 +63,7 @@ Successfully installed ezconda
 
 </div>
 
-### Using `mamba`:
+### Using `mamba`
 
 <div class="termy">
 
@@ -71,7 +75,7 @@ Successfully installed ezconda
 
 </div>
 
-!!! Info
+??? Info "mamba"
     If you haven't heard of `mamba`, it offers higher speed and more reliable environment solutions. Learn more about `mamba` on their [website](https://mamba.readthedocs.io/en/latest/).
 
 ## A Minimal Example
@@ -123,6 +127,9 @@ dependencies:
     - scipy
 ```
 
+!!! Note
+    The `conda-forge` channel was also added to the specifications along with the packages.
+
 ### Remove packages
 
 The specifications file is also updated when you remove packages.
@@ -147,6 +154,9 @@ dependencies:
     - scipy
 ```
 
+??? Info
+    If you try to remove a package that is a dependency for an installed package, **EZconda** will inform you before removing the package. See [docs](user_guide/remove_packages.md) for more details.
+
 ### Recreate environment
 
 As you create, install and remove packages, in addition to the specifications file, **EZconda** also generates and maintains a lock file. You can use this lock file to reproducibly recreate an environment.
@@ -154,17 +164,18 @@ As you create, install and remove packages, in addition to the specifications fi
 <div class="termy">
 
 ```console
-$ ezconda recreate -n new-env ds-proj-osx-64.lock
+$ ezconda recreate -n new-env ds-proj-darwin-x86_64.lock
 
 // Creates a new environment 'new-env' that is identical to 'ds-proj'
 ```
 </div>
 
 !!! Info "Lock file"
-    You can learn more about environment recreation in the [docs](user_guide/recreate_env.md).
+    You can learn more about [environment recreation](user_guide/recreate_env.md) and [lock file](design_decisions/lockfile.md) in docs.
+
 
 ## Summary
 
-In summary, **EZconda** creates a specifications file and a lock file for you as you create and manage your conda environment and packages.
+In summary, **EZconda** provides a higher level abstraction for creating and managing `conda` environments.
 
 To learn more, check out the [User Guide](user_guide/create_new_env.md)

@@ -15,7 +15,7 @@ You can generate a lock file by providing `--name`/`-n`:
 ```console
 $ ezconda lock -n chem-ml
 
-// Generates 'chem-ml.lock' file
+// Generates 'chem-ml.lock' file from existing `chem-ml` conda environment
 ```
 </div>
 
