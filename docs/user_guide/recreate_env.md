@@ -7,7 +7,7 @@ This is in addition to the *environment specifications* file (`environment.yml` 
 Basically, anytime you perform an action on the conda environment using **EZconda**, it updates the specifications file as well as the _**lock file**_.
 
 !!! Note
-    The lock file is named after the environment name and the platform for which the environment was solved.
+    The lock file is named after the environment name and the platform and architecture for which the environment was solved.
 
 ## `recreate`
 
@@ -16,9 +16,9 @@ To reproduce an environment, use the `recreate` command -
 <div class="termy">
 
 ```console
-$ ezconda recreate new-proj-osx-64.lock
+$ ezconda recreate new-proj-darwin-x86_64.lock
 
-// Creates a new environment - 'new-proj-osx-64'
+// Creates a new environment - 'new-proj-darwin-x86_64'
 
 // Installs all the packages listed in the file
 ```
@@ -26,14 +26,16 @@ $ ezconda recreate new-proj-osx-64.lock
 
 ## Name the environment
 
-You can provide a name for the new environment using the `-n` or `--name` option -
+By default, **EZconda** will use the environment name specified in the lock file. 
+
+However, you can also provide a name for the new environment using the `-n` or `--name` option.
 
 <div class="termy">
 
 ```console
-$ ezconda recreate -n iris-2022 new-proj-osx-64.lock
+$ ezconda recreate -n iris new-proj-darwin-x86_64.lock
 
-// Creates a new environment - 'iris-2022' from the lock file
+// Creates a new environment - 'iris' from the lock file
 ```
 </div>
 
@@ -41,7 +43,7 @@ $ ezconda recreate -n iris-2022 new-proj-osx-64.lock
 
 Lock files are specific to the platform on which the environment was created. 
 
-This means an environment specifications file `env.yml` on Mac and Linux will have two different lock files - `env-osx-64.lock` and `env-linux-aarch64.lock`. This is because packages might have different dependencies for different platforms.
+This means an environment specifications file `env.yml` on Mac and Linux will have two different lock files - `env-darwin-x86_64.lock` and `env-linux-aarch64.lock`. This is because packages might have different dependencies for different platforms.
 
 For instance, installing `numpy` and `python=3.9` on *mac-osx-64* and *linux-aarch64* will result in slightly different dependencies.
 
@@ -69,3 +71,12 @@ For instance, installing `numpy` and `python=3.9` on *mac-osx-64* and *linux-aar
     ├─ python[3.9.9]
     └─ python_abi[3.9]
     ```
+
+## Lock file validation
+
+If a lock file generated on a Mac is used to recreate an environment on a Linux machine, **EZconda** will throw a lock file validation error instead of creating broken environments.
+
+!!! Note
+    This is different from how `conda` recreates environments from *explicit* specifications file. 
+    
+    `conda` does not check for platform or architecture compatibility while installing from *explicit* specifications file (also known as lock files).

@@ -31,7 +31,7 @@ $ ezconda remove -n new-proj numpy
 💾 Updated specifications to 'new-proj.yml'
 
 // Updates lock file with new packages
-🔒 Lock file updated ⚠ EXPERIMENTAL ⚠
+🔒 Lock file updated
 ⭐ Done!
 ```
 </div>

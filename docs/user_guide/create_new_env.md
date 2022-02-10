@@ -18,7 +18,7 @@ $ ezconda create -n new-proj python=3.9
 💾 Saved specifications to 'new-proj.yml'
 
 // Generates an environment lock file
-🔒 Lock file generated ⚠ EXPERIMENTAL ⚠
+🔒 Lock file generated
 
 ⭐ Done!
 ```
