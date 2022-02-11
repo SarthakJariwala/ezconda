@@ -1,6 +1,69 @@
 # Release Notes
 
 
+## :sparkles: **v0.4.0**
+
+### :rocket: Features
+
+- Lock file now checks for architecture and system specifications before attempting installation via `recreate` command.
+
+    - If the specifications of the system do not match the lock file specifications, the `recreate` does not go forward. `create` should be used in that case.
+
+    !!! Note
+        This is different from how `conda` does explicit installtions. See [docs](user_guide/recreate_env.md#lock-file-validation) for more information.
+    
+- Lock files also have a new `toml` based file format and new fields containing system specifications and other metadata.
+
+> To upgrade to the new lock file format from a previous file format -
+
+<div class="termy">
+
+```console
+$ ezconda lock --name ENVIRONMENT_NAME
+
+// Generates new lock file for ENVIRONMENT_NAME
+```
+</div>
+
+- New `config` command to set default solver
+
+<div class="termy">
+
+```console
+$ ezconda config --solver mamba
+
+// Default solver is set to mamba
+```
+</div>
+
+- View current configurations
+
+
+<div class="termy">
+
+```console
+$ ezconda config --show
+
+// Prints current configurations
+```
+</div>
+
+
+### :book: Documentation
+
+- Add documentation on [design decisions](design_decisions/intro.md). Specifically, on specifications file and lock file.
+
+- Update documentation related to lock file and config command.
+
+
+### :construction_worker: CI System
+
+- Add `release-drafter` workflow to GitHub Actions to update release notes as PRs are merged.
+
+- Add `release` workflow to github actions to build and deploy using GitHub Actions.
+
+---
+
 ## :sparkles: **v0.3.1**
 
 ### :beetle: Fix
