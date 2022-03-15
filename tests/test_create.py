@@ -1,3 +1,5 @@
+import subprocess
+import json
 import yaml
 import pytest
 from typer.testing import CliRunner
@@ -54,3 +56,18 @@ def test_create_w_pkg_install_w_channel(clean_up_env_after_test):
         env_specs = yaml.load(f, Loader=yaml.FullLoader)
         assert "numpy" in env_specs["dependencies"]
         assert "anaconda" in env_specs["channels"]
+
+
+@pytest.mark.usefixtures("clean_up_env_after_test")
+def test_create_env_from_yml_file(clean_up_env_after_test):
+    result = runner.invoke(app, ["create", "--file", "tests/test-env.yml"])
+
+    p = subprocess.run(
+        ["conda", "env", "list", "--json"],
+        capture_output=True,
+        text=True,
+    )
+    env_dict = json.loads(p.stdout)
+    envs = [env.split("/")[-1] for env in env_dict["envs"]]
+
+    assert "test" in envs
