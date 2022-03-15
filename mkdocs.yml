@@ -38,7 +38,9 @@ extra:
 nav:
   - Home : "index.md"
   - User Guide:
-    - Create new environment : "user_guide/create_new_env.md"
+    - Create new environment:
+      - From scratch : "user_guide/create_new_env/#create-new-environment"
+      - Using existing file : "user_guide/create_new_env/#from-existing-specifications-file" 
     - Install packages : "user_guide/install_packages.md"
     - Remove packages : "user_guide/remove_packages.md"
     - Reproducible environment : "user_guide/recreate_env.md"

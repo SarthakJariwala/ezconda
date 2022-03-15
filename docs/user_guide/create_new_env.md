@@ -24,8 +24,6 @@ $ ezconda create -n new-proj python=3.9
 ```
 </div>
 
-!!! Tip
-    `ezconda` is *almost* a drop-in replacement for `conda`.
 
 Upon creating a new conda environment, **EZconda** also automatically creates a new specifications file `new-proj.yml`. As you can see below, the contents of the file contain the specifications entered above. 
 
@@ -45,7 +43,7 @@ Now, throughout the lifecycle of `new-proj` environment and your project, **EZco
     You can disable it by passing `--no-lock` option.
 
 !!! Note
-    You will learn more about lock file later in the docs.
+    You can learn more about lock file [in the docs](recreate_env.md/#platform-specific-lock-files).
 
 
 ## Add channels
@@ -88,3 +86,32 @@ $ ezconda create -n new-proj -f awesome-proj.yml python=3.9
 
 !!! Note
     It is recommended to keep the environment name and specifications file name the same.
+
+
+---
+
+# From existing specifications file
+
+If you already have a specifications file that you want to use for creating an environment, you can use the `--file` option with create command.
+
+Environment specifications file:
+
+```yaml title="sciml.yml"
+name: sciml
+channels:
+    - defaults
+    - conda-forge
+dependencies:
+    - python=3.9
+    - numpy
+    - pandas
+```
+
+<div class="termy">
+
+```console
+$ ezconda create --file sciml.yml
+
+// Creates a new environment named `sciml` using `sciml.yml`
+```
+</div>
