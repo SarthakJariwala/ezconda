@@ -1,6 +1,23 @@
 # Release Notes
 
 
+## :sparkles: **v0.5.0**
+
+### :rocket: Features
+
+- Create a new environment from existing environment specifications ".yml" file.
+
+<div class="termy">
+
+```console
+$ ezconda create --file sciml.yml
+
+// Creates a new environment named `sciml` using `sciml.yml`
+```
+</div>
+
+---
+
 ## :sparkles: **v0.4.0**
 
 ### :rocket: Features
