@@ -111,7 +111,7 @@ class LockFile:
 
                     [bold green]ezconda create -n <environment_name> -f <env.yml>[/]
                     """
-                ) # TODO: add creating env from yml file
+                )  # TODO: add creating env from yml file
             )
             raise typer.Exit()
 
