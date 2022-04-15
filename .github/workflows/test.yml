@@ -13,8 +13,11 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2.3.4
-    
-    - uses: s-weigand/setup-conda@v1.1.0
+
+    - uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-update-conda: true
+          python-version: ${{ matrix.python-version }}
     
     - run: |
         conda install -c conda-forge mamba pip typer PyYaml pytest pytest-cov codecov coverage rich tomlkit
