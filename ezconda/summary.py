@@ -1,7 +1,6 @@
 import json
 import subprocess
 from textwrap import dedent
-from py import code
 import typer
 
 from rich.tree import Tree
