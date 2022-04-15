@@ -29,7 +29,7 @@ def test_lock_for_existing_conda_envs():
     files = os.listdir()
 
     assert f"lock-test-{sys.platform}-{platform.machine()}.lock" in files
-    
+
     subprocess.run(
         [
             "conda",

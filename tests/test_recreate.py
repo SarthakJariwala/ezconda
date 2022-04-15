@@ -32,7 +32,7 @@ def test_recreate_wo_env_name(clean_up_env_after_test):
     # check if env is created
     env_name = "test"  # env name is taken from the lock file
     envs_installed = json.load(os.popen("conda env list --json"))["envs"]
-    
+
     if sys.platform == "darwin":
         assert f"/usr/local/miniconda/envs/{env_name}" in envs_installed
     elif sys.platform == "win32":
