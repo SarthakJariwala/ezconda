@@ -1,6 +1,7 @@
 import json
 import subprocess
 from textwrap import dedent
+from py import code
 import typer
 
 from rich.tree import Tree
@@ -22,7 +23,7 @@ def summary(
         help="Revision number to summarize; default is latest",
     ),
 ):
-    get_summary_for_revision(name, revision_no=revision)
+    _ = get_summary_for_revision(name, revision_no=revision)
 
 
 def get_summary_for_revision(name: str, revision_no: int = -1):
@@ -46,17 +47,17 @@ def get_summary_for_revision(name: str, revision_no: int = -1):
         console.print(
             f"[red]Revision {revision_no} not found.\nYou have {len(_rev_data)} revisions for {name} environment."
         )
-        raise typer.Exit()
+        raise typer.Exit(code=1)
 
     _installed = _info["install"]
     _upgraded = _info["upgrade"]
     _removed = _info["remove"]
-    _downgrade = _info["downgrade"]
+    _downgraded = _info["downgrade"]
 
     console.print(
         dedent(
             f"""
-            [bold green]{len(_installed)} Installs,[/] [bold purple]{len(_upgraded)} Upgrades[/], [bold yellow]{len(_downgrade)} Downgrades[/], [bold red]{len(_removed)} Removals[/]
+            [bold green]{len(_installed)} Installs,[/] [bold purple]{len(_upgraded)} Upgrades[/], [bold yellow]{len(_downgraded)} Downgrades[/], [bold red]{len(_removed)} Removals[/]
             """
         )
     )
@@ -70,14 +71,16 @@ def get_summary_for_revision(name: str, revision_no: int = -1):
         upgrade_branch = tree.add("[bold purple]Upgrades[/]")
         for u in _upgraded:
             upgrade_branch.add(f"[purple]New: {u['new']}[/]\nOld: {u['old']}")
-    if _downgrade:
+    if _downgraded:
         downgrade_branch = tree.add("[bold yellow]Downgrades")
-        for d in _downgrade:
+        for d in _downgraded:
             downgrade_branch.add(f"[yellow]New: {d['new']}[/]\nOld: {d['old']}")
     if _removed:
         removal_branch = tree.add("[bold red]Removals[/]")
         for r in _removed:
             removal_branch.add(f"[red]{r}[/]")
 
-    if _installed or _upgraded or _downgrade or _removed:
+    if _installed or _upgraded or _downgraded or _removed:
         console.print(tree)
+    
+    return _installed, _upgraded, _downgraded, _removed
