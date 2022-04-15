@@ -21,9 +21,6 @@ jobs:
     - run: |
         conda install -c conda-forge mamba pip typer PyYaml pytest pytest-cov codecov coverage rich tomlkit
         pip install . --no-deps
-    
-    - name: Run Tests
-      run: |
         pytest --cov=ezconda
         coverage xml
         codecov
