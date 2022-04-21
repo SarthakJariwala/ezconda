@@ -46,6 +46,7 @@ nav:
     - Reproducible environment : "user_guide/recreate_env.md"
     - Lock file for any environment : "user_guide/lock_existing_env.md"
     - Use different solver: "user_guide/changing_solvers.md"
+    - Environment summary: "user_guide/summary.md"
     - Configurations : "user_guide/configuration.md"
     - Autocompletions : "user_guide/autocomplete.md"
   - Design Decisions : 

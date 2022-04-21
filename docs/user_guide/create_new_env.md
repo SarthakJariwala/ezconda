@@ -68,23 +68,10 @@ dependencies:
     - python=3.9
 ```
 
-## Providing specifications file name
-
-You may have observed above that the name the environment `new-proj` is also the name of the environment specifcations file `new-proj.yml`.
-
-However, you can use the `-f` or `--file` flag if you would like to use a file name that isn't same as the environment name.
-
-<div class="termy">
-
-```console
-$ ezconda create -n new-proj -f awesome-proj.yml python=3.9
-
-// Saves environment specs to 'awesome-proj.yml'
-
-```
-</div>
-
 !!! Note
+
+    The environment name `new-proj` is also the name of the environment specifcations file `new-proj.yml`.
+
     It is recommended to keep the environment name and specifications file name the same.
 
 
