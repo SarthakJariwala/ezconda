@@ -9,19 +9,19 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest] #, windows-latest]
     
     steps:
     - uses: actions/checkout@v2.3.4
-    
-    - uses: s-weigand/setup-conda@v1
-    
-    - run: |
+
+    - uses: conda-incubator/setup-miniconda@v2
+      with:
+        auto-update-conda: true
+    - name: Install Packages and Run Tests
+      shell: bash -l {0}
+      run: |
         conda install -c conda-forge mamba pip typer PyYaml pytest pytest-cov codecov coverage rich tomlkit
         pip install . --no-deps
-    
-    - name: Run Tests
-      run: |
         pytest --cov=ezconda
         coverage xml
         codecov

@@ -2,8 +2,6 @@ import subprocess
 import typer
 from typing import List, Optional
 from pathlib import Path
-from conda.cli.python_api import Commands
-from conda.cli.python_api import run_command
 
 from .console import console
 from ._utils import (
@@ -15,6 +13,7 @@ from ._utils import (
 )
 from .solver import Solver
 from .config import get_default_solver
+from .summary import get_summary_for_revision
 from .experimental import write_lock_file
 
 
@@ -34,6 +33,9 @@ def install(
         None, "--channel", "-c", help="Additional channel to search for packages"
     ),
     solver: Solver = typer.Option(None, help="Solver to use", case_sensitive=False),
+    summary: bool = typer.Option(
+        True, "--summary", help="Show summary of changes made"
+    ),
     verbose: Optional[bool] = typer.Option(
         False, "--verbose", "-v", help="Display standard output from conda"
     ),
@@ -100,3 +102,6 @@ def install(
             write_lock_file(env_name)
 
         console.print(f"[bold green] :star: Done!")
+
+        if summary:
+            get_summary_for_revision(env_name)

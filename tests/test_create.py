@@ -1,3 +1,4 @@
+import sys
 import subprocess
 import json
 import yaml
@@ -68,6 +69,9 @@ def test_create_env_from_yml_file(clean_up_env_after_test):
         text=True,
     )
     env_dict = json.loads(p.stdout)
-    envs = [env.split("/")[-1] for env in env_dict["envs"]]
+    if sys.platform == "win32":
+        envs = [env.split("\\")[-1] for env in env_dict["envs"]]
+    else:
+        envs = [env.split("/")[-1] for env in env_dict["envs"]]
 
     assert "test" in envs
