@@ -1,6 +1,29 @@
 # Release Notes
 
 
+## :sparkles: **v0.6.0**
+
+### :rocket: Features
+
+- Add `summary` command to show environment summaries.
+
+<div class="termy">
+
+```console
+$ ezconda summary --name sciml
+
+// Shows environment summary for `sciml`
+```
+</div>
+
+- Add `--summary` option to `create`, `install` and `remove` commands. By default, the option is set to `True` and will show environment summaries when commands are called.
+
+### :construction_worker: CI System
+
+- Changed `conda` GitHub action from `s-weigand/setup-conda@v1` to `conda-incubator/setup-miniconda@v2`.
+
+---
+
 ## :sparkles: **v0.5.0**
 
 ### :rocket: Features
