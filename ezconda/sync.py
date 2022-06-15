@@ -73,7 +73,7 @@ def sync(
             console.print(f"[yellow]{str(p.stdout)}")
 
         console.print(
-            "[bold green] :arrows_counterclockwise: Environment & specifications file are now in sync!"
+            f"[bold green] :arrows_counterclockwise: '{env_name}' & '{file}' are now in sync!"
         )
 
         if lock:
