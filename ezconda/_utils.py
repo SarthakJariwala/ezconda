@@ -41,7 +41,7 @@ def get_validate_file_name(env_name: str, file: Optional[str] = None) -> Optiona
                 dedent(
                     f"""
             [yellow]If your environment name and specifications file name are not the same,
-            please provide the specifications file name to update using the '-f' or '--file' flag.
+            please provide the specifications file name using the '-f' or '--file' flag.
             """
                 )
             )
