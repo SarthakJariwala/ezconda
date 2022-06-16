@@ -20,7 +20,7 @@ jobs:
     - name: Install Packages and Run Tests
       shell: bash -l {0}
       run: |
-        conda install -c conda-forge mamba pip typer PyYaml pytest pytest-cov codecov coverage rich tomlkit
+        conda install -c conda-forge mamba pip typer PyYaml pytest pytest-cov codecov coverage rich tomlkit importlib_metadata
         pip install . --no-deps
         pytest --cov=ezconda
         coverage xml
