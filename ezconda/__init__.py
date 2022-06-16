@@ -1,1 +1,4 @@
-__version__ = "0.5.0"
+from importlib_metadata import version  # type: ignore
+
+
+__version__ = version(__name__)
