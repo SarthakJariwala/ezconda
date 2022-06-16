@@ -44,7 +44,7 @@ nav:
     - Install packages : "user_guide/install_packages.md"
     - Remove packages : "user_guide/remove_packages.md"
     - Reproducible environment : "user_guide/recreate_env.md"
-    - Sync environment with specifications file : "user_guide/sync_env_with_specfile.md"
+    - Sync local environment : "user_guide/sync_env.md"
     - Lock file for any environment : "user_guide/lock_existing_env.md"
     - Use different solver: "user_guide/changing_solvers.md"
     - Environment summary: "user_guide/summary.md"
