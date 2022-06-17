@@ -1,6 +1,4 @@
-import sys
 import os
-import json
 import pytest
 from typer.testing import CliRunner
 from pathlib import Path
@@ -14,6 +12,14 @@ runner = CliRunner()
 @pytest.mark.usefixtures("clean_up_env_after_test")
 def test_create_without_install(clean_up_env_after_test):
     result = runner.invoke(app, ["create", "-n", "test"])
+
+    assert Path("test.yml").is_file()
+    check_if_env_is_created("test")
+
+
+@pytest.mark.usefixtures("clean_up_env_after_test")
+def test_create_without_env_name(clean_up_env_after_test):
+    result = runner.invoke(app, ["create"], input="test")
 
     assert Path("test.yml").is_file()
     check_if_env_is_created("test")
