@@ -41,7 +41,7 @@ def test_env_sync_w_lockfile():
     # copy lockfile and rename to test2
     shutil.copy(
         f"test-{sys.platform}-{platform.machine()}.lock",
-        f"test2-{sys.platform}-{platform.machine()}.lock"
+        f"test2-{sys.platform}-{platform.machine()}.lock",
     )
 
     # sync the environment test2 with new test2 lockfile
