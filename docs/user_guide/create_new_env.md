@@ -2,6 +2,23 @@
 
 You can use the `create` command to create new conda environments with environment specifications file (more below).
 
+## Create new (empty) environment
+
+To create a new `conda` environment called `new-proj`:
+
+<div class="termy">
+
+```console
+$ ezconda create -n new-proj
+
+// Creates a new conda environment with name `new-proj`
+🚀 Created 'new-proj' environment
+
+⭐ Done!
+```
+</div>
+
+
 ## Create new environment with packages
 
 Let's say you want to create a new `conda` environment called `new-proj` with `Python 3.9` installed.
@@ -73,32 +90,3 @@ dependencies:
     The environment name `new-proj` is also the name of the environment specifcations file `new-proj.yml`.
 
     It is recommended to keep the environment name and specifications file name the same.
-
-
----
-
-# From existing specifications file
-
-If you already have a specifications file that you want to use for creating an environment, you can use the `--file` option with create command.
-
-Environment specifications file:
-
-```yaml title="sciml.yml"
-name: sciml
-channels:
-    - defaults
-    - conda-forge
-dependencies:
-    - python=3.9
-    - numpy
-    - pandas
-```
-
-<div class="termy">
-
-```console
-$ ezconda create --file sciml.yml
-
-// Creates a new environment named `sciml` using `sciml.yml`
-```
-</div>

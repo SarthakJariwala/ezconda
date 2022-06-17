@@ -157,9 +157,9 @@ dependencies:
 ??? Info
     If you try to remove a package that is a dependency for an installed package, **EZconda** will inform you before removing the package. See [docs](user_guide/remove_packages.md) for more details.
 
-### Recreate environment
+### Use Lockfile to re-create environment
 
-As you create, install and remove packages, in addition to the specifications file, **EZconda** also generates and maintains a lock file. You can use this lock file to reproducibly recreate an environment.
+As you create, install and remove packages, in addition to the specifications file, **EZconda** also generates and maintains a lock file. You can use this lock file to reproducibly re-create an environment.
 
 <div class="termy">
 
@@ -171,7 +171,7 @@ $ ezconda recreate -n new-env ds-proj-darwin-x86_64.lock
 </div>
 
 !!! Info "Lock file"
-    You can learn more about [environment recreation](user_guide/recreate_env.md) and [lock file](design_decisions/lockfile.md) in docs.
+    You can learn more about [reproducible environments](./design_decisions/reproducible_environments.md) and [lock file](./design_decisions/lockfile.md) in docs.
 
 
 ## Summary

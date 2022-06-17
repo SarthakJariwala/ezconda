@@ -9,35 +9,6 @@ Basically, anytime you perform an action on the conda environment using **EZcond
 !!! Note
     The lock file is named after the environment name and the platform and architecture for which the environment was solved.
 
-## `recreate`
-
-To reproduce an environment, use the `recreate` command - 
-
-<div class="termy">
-
-```console
-$ ezconda recreate new-proj-darwin-x86_64.lock
-
-// Creates a new environment - 'new-proj-darwin-x86_64'
-
-// Installs all the packages listed in the file
-```
-</div>
-
-## Name the environment
-
-By default, **EZconda** will use the environment name specified in the lock file. 
-
-However, you can also provide a name for the new environment using the `-n` or `--name` option.
-
-<div class="termy">
-
-```console
-$ ezconda recreate -n iris new-proj-darwin-x86_64.lock
-
-// Creates a new environment - 'iris' from the lock file
-```
-</div>
 
 ## Platform Specific Lock Files
 
@@ -78,5 +49,3 @@ If a lock file generated on a Mac is used to recreate an environment on a Linux 
 
 !!! Note
     This is different from how `conda` recreates environments from *explicit* specifications file. 
-    
-    `conda` does not check for platform or architecture compatibility while installing from *explicit* specifications file (also known as lock files).
