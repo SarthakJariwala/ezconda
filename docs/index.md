@@ -25,23 +25,25 @@
 
 **EZconda** is a command line interface application that helps practitioners create and manage `conda` environment and related specifications with ease.
 
+> It provides an easy to use higher level abstraction for creating and managing reproducible `conda` environments.
+
 ## Key Features
 
 - **Environment Management** : Create and manage `conda` environments with ease.
 
-- **Environment Specifications** : Add and remove packages from the <abbr title="commonly known as environment.yml file">specifications file</abbr> as you install & remove them.
+- **Specifications Management** : Add and remove packages from the <abbr title="commonly known as environment.yml file">specifications file</abbr> as you install & remove them.
     
     > _**No manual file edits! No exporting entire environments!**_
 
-- **Reproducible Environments** : Auto lock current environment state and re-create it anywhere.
+- **Reproducible Environments** : Auto lock current environment state and re-create it exactly anywhere!
+
+- **Easy & Intuitive** : Intuitive commands and autocompletions by default.
 
 - **Fast & Reliable Environment Resolution** : Get fast and reliable environment solves by default.
 
     > *EZconda* uses `mamba` by default, but you can easily switch between `mamba` and `conda`.
 
-- **Easy & Intuitive** : Intuitive commands and autocompletions by default.
-
-- **Built-in Best Practices** : Forces the user to follow best `conda` practices.
+- **Built-in Good Practices & Guardrails** : Enables the user to follow good practices, by default.
 
 ## Requirements
 
@@ -88,6 +90,8 @@ Create a new environment with `Python 3.9` installed -
 
 ```console
 $ ezconda create -n ds-proj python=3.9
+
+// Creates ds-proj with Python=3.9 installed
 ```
 
 </div>
@@ -127,7 +131,7 @@ dependencies:
     - scipy
 ```
 
-!!! Note
+!!! Note "Adding channels"
     The `conda-forge` channel was also added to the specifications along with the packages.
 
 ### Remove packages
@@ -154,28 +158,48 @@ dependencies:
     - scipy
 ```
 
-??? Info
+!!! Note "Informed Package Removal"
     If you try to remove a package that is a dependency for an installed package, **EZconda** will inform you before removing the package. See [docs](user_guide/remove_packages.md) for more details.
 
-### Use Lockfile to re-create environment
+### Sync environment with changes
 
-As you create, install and remove packages, in addition to the specifications file, **EZconda** also generates and maintains a lock file. You can use this lock file to reproducibly re-create an environment.
+Let's say you are working with collaborators and they update the specifications file (`ds-proj.yml`) with a new dependency. Now, your local conda environment is out of sync with the new dependencies. 
+
+To bring it back in sync, you can use the `sync` command.
 
 <div class="termy">
 
 ```console
-$ ezconda recreate -n new-env ds-proj-darwin-x86_64.lock
+$ ezconda sync -n ds-proj --with specfile
 
-// Creates a new environment 'new-env' that is identical to 'ds-proj'
+// Syncs ds-proj environment with new changes in specifications file (ds-proj.yml)
 ```
 </div>
+
+!!! Info "Sync changes"
+    Learn more about syncing environments in the [user guide](./user_guide/sync_env.md).
+
+### Re-create environment
+
+As you create, install and remove packages, in addition to the specifications file, **EZconda** also generates and maintains a lock file.
+
+You can use this lock file to reproducibly re-create an environment.
 
 !!! Info "Lock file"
     You can learn more about [reproducible environments](./design_decisions/reproducible_environments.md) and [lock file](./design_decisions/lockfile.md) in docs.
 
+<div class="termy">
+
+```console
+$ ezconda create --file ds-proj-darwin-x86_64.lock
+
+// Creates a new environment 'ds-proj-darwin-x86_64.lock'
+```
+</div>
+
 
 ## Summary
 
-In summary, **EZconda** provides a higher level abstraction for creating and managing `conda` environments.
+In summary, **EZconda** provides an easy to use higher level abstraction for creating and managing reproducible `conda` environments.
 
 To learn more, check out the [User Guide](user_guide/create_new_env.md)
