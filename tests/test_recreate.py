@@ -4,6 +4,7 @@ import json
 import pytest
 from typer.testing import CliRunner
 from ezconda.main import app
+from .helpers import check_if_env_is_created, check_if_pkg_is_installed
 
 
 runner = CliRunner()
@@ -27,25 +28,8 @@ def test_recreate_wo_env_name(clean_up_env_after_test):
             lock_file = file
     result = runner.invoke(app, ["recreate", lock_file])
 
-    assert f"Recreated 'test' environment from lock file" in result.stdout
-
-    # check if env is created
-    env_name = "test"  # env name is taken from the lock file
-    envs_installed = json.load(os.popen("conda env list --json"))["envs"]
-
-    if sys.platform == "darwin":
-        assert f"/usr/local/miniconda/envs/{env_name}" in envs_installed
-    elif sys.platform == "win32":
-        assert f"C:\\Miniconda\\envs\\{env_name}" in envs_installed
-    else:
-        assert f"/usr/share/miniconda/envs/{env_name}" in envs_installed
-
-    # check if typer is installed in the env
-    pkgs = json.load(os.popen(f"conda list -n {env_name} --json"))
-    for pkg in pkgs:
-        if pkg == "typer":
-            assert pkg["name"] == "typer"
-            assert pkg["channel"] == "conda-forge"
+    check_if_env_is_created("test")
+    check_if_pkg_is_installed("test", "typer", channel="conda-forge")
 
 
 @pytest.mark.usefixtures("clean_up_env_after_test")
@@ -60,20 +44,5 @@ def test_recreate_w_env_name(clean_up_env_after_test):
     env_name = "test2"
     result = runner.invoke(app, ["recreate", lock_file, "-n", env_name])
 
-    assert f"Recreated '{env_name}' environment from lock file" in result.stdout
-
-    # check if env is created
-    envs_installed = json.load(os.popen("conda env list --json"))["envs"]
-    if sys.platform == "darwin":
-        assert f"/usr/local/miniconda/envs/test/envs/{env_name}" in envs_installed
-    elif sys.platform == "win32":
-        assert f"C:\\Miniconda\\envs\\test\\envs\\{env_name}" in envs_installed
-    else:
-        assert f"/usr/share/miniconda/envs/test/envs/{env_name}" in envs_installed
-
-    # check if typer is installed in the env
-    pkgs = json.load(os.popen(f"conda list -n {env_name} --json"))
-    for pkg in pkgs:
-        if pkg["name"] == "typer":
-            assert pkg["name"] == "typer"
-            assert pkg["channel"] == "conda-forge"
+    check_if_env_is_created("test2")
+    check_if_pkg_is_installed("test2", "typer", channel="conda-forge")

@@ -1,7 +1,6 @@
 import sys
-import subprocess
+import os
 import json
-import yaml
 import pytest
 from typer.testing import CliRunner
 from pathlib import Path
@@ -57,3 +56,18 @@ def test_create_env_from_yml_file(clean_up_env_after_test):
 
     assert result.exit_code == 0
     check_if_env_is_created("test")
+
+@pytest.mark.usefixtures("clean_up_env_after_test")
+def test_create_env_from_lock_file(clean_up_env_after_test):
+    _ = runner.invoke(
+        app, ["create", "-n", "test", "-c", "conda-forge", "python=3.9", "typer"]
+    )
+
+    for file in os.listdir():
+        if file.endswith(".lock") and file != "poetry.lock":
+            lock_file = file
+    
+    result = runner.invoke(app, ["create", "--name", "test2", "--file", lock_file])
+
+    check_if_env_is_created("test2")
+    check_if_pkg_is_installed("test2", "typer", channel="conda-forge")
