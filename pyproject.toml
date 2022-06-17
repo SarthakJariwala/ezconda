@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ezconda"
-version = "0.6.0"
+version = "0.7.0"
 description = "Create, Manage, Re-create conda environments & specifications with ease."
 authors = ["Sarthak Jariwala"]
 readme = "README.md"

@@ -1,6 +1,64 @@
 # Release Notes
 
 
+## :sparkles: **v0.7.0**
+
+Requires Python>=3.7
+
+### :rocket: Features
+
+- `create` command can be used to create environments from lock file.
+
+This unifies `create` command as the way to create new environments from scratch, from specifications file or from lock file.
+
+<div class="termy">
+
+```console
+$ ezconda create --file mlproj-darwin-x86_64.lock
+
+// Creates environment from mlproj-darwin-x86_64.lock
+```
+</div>
+
+- Sync local conda environment with updated specifications file using `sync` command.
+
+<div class="termy">
+
+```console
+$ ezconda sync -n ml-proj --with specfile
+
+// Syncs 'ml-proj' environment with 'ml-proj.yml' file
+```
+
+</div>
+
+- Sync local conda environment with updated lock file using `sync` command.
+
+<div class="termy">
+
+```console
+$ ezconda sync -n ml-proj --with lockfile
+
+// Syncs 'ml-proj' environment with corresponding lock file
+```
+
+</div>
+
+### :fire: Deprecations
+
+- `recreate` command is deprecated and will be removed in v0.8.0. Use `create` instead for creating new environments from lock file.
+
+### :beetle: Fix
+
+- `version` command now shows the correct version.
+
+### :package: Build System
+
+- `importlib-metadata` is now a dependency.
+- Minimum supported version of Python is 3.7.
+
+---
+
 ## :sparkles: **v0.6.0**
 
 ### :rocket: Features
