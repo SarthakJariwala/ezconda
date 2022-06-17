@@ -11,6 +11,7 @@ from .recreate import recreate
 from .config import config
 from .summary import summary
 from .sync import sync
+from .update import update
 from .experimental.lock import lock
 
 
@@ -25,6 +26,7 @@ app.command()(recreate)
 app.command()(lock)
 app.command()(summary)
 app.command()(sync)
+app.command()(update)
 app.command()(config)
 # app.command()(show)
 

@@ -30,7 +30,6 @@ def check_if_pkg_is_installed(env_name, pkg_name, channel=None):
     if channel:
         for pkg in pkg_specs:
             if pkg["name"] == pkg_name:
-                print(pkg["channel"])
                 assert pkg["channel"] == channel
 
 
