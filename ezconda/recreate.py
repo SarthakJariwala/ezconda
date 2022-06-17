@@ -3,6 +3,7 @@ import tempfile
 import typer
 from typing import Optional
 from pathlib import Path
+from textwrap import dedent
 
 from .console import console
 from .solver import Solver
@@ -98,6 +99,15 @@ def recreate(
     Re-create an environment from lock file. This will install all the packages
     specified in the lock file, if the system and platform match lock file.
     """
+
+    console.print(
+        dedent(
+            """
+        [bold yellow] :warning: `recreate` is deprecated and will be removed in v0.8.0.
+        Use `create` with `--file` option.
+        """
+        )
+    )
 
     if solver is None:
         solver = get_default_solver()
