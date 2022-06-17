@@ -1,6 +1,6 @@
 FROM continuumio/miniconda3
 
-RUN conda install -c conda-forge mamba pip typer PyYaml pytest pytest-cov rich tomlkit
+RUN conda install -c conda-forge mamba pip typer PyYaml pytest pytest-cov rich tomlkit importlib_metadata
 
 COPY . /ezconda
 
