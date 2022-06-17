@@ -22,6 +22,10 @@ def summary(
         help="Revision number to summarize; default is latest",
     ),
 ):
+    """
+    Show environment summary for the revision number.
+    By default, it will show the latest revision.
+    """
     _ = get_summary_for_revision(name, revision_no=revision)
 
 
