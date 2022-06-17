@@ -75,7 +75,7 @@ def read_lock_file_and_install(
         # TODO: Add installation for pypi channels/packages
 
         console.print(
-            f"[bold green] :rocket: Recreated '{env_name}' environment from lock file",
+            f"[bold green] :rocket: Created '{env_name}' environment from lock file",
         )
 
 
