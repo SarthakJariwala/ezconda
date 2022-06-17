@@ -14,14 +14,19 @@ theme:
   custom_dir: overrides
   palette:
     scheme: default
-    primary: black
+    primary: white
     accent: amber
+  logo: logo_small.png
   icon:
     repo: fontawesome/brands/github-alt
   features:
     - search.suggest
     - search.highlight
     - content.code.annotate
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
   font:
     text: Roboto
     code: Roboto Mono
@@ -38,22 +43,29 @@ extra:
 nav:
   - Home : "index.md"
   - User Guide:
-    - Create new environment:
-      - From scratch : "user_guide/create_new_env/#create-new-environment"
-      - Using existing file : "user_guide/create_new_env/#from-existing-specifications-file" 
-    - Install packages : "user_guide/install_packages.md"
-    - Remove packages : "user_guide/remove_packages.md"
-    - Reproducible environment : "user_guide/recreate_env.md"
-    - Sync local environment : "user_guide/sync_env.md"
-    - Lock file for any environment : "user_guide/lock_existing_env.md"
-    - Use different solver: "user_guide/changing_solvers.md"
-    - Environment summary: "user_guide/summary.md"
-    - Configurations : "user_guide/configuration.md"
-    - Autocompletions : "user_guide/autocomplete.md"
-  - Design Decisions : 
-    - Introduction : "design_decisions/intro.md"
-    - Specifications File : "design_decisions/specfile.md"
-    - Lock File : "design_decisions/lockfile.md"
+    - Overview:
+      - Introduction : "design_decisions/intro.md"
+      - Specifications file : "design_decisions/specfile.md"
+      - Lock file : "design_decisions/lockfile.md"
+      - Reproducible environments : "design_decisions/reproducible_environments.md"
+    - Create New Environment:
+      - From scratch : "user_guide/create_new_env.md"
+      - Using specfications file : "user_guide/create_new_env_from_specfile.md"
+      - Using lock file : "user_guide/create_new_env_from_lockfile.md"
+    - Install & Remove Packages:
+      - Install packages : "user_guide/install_packages.md"
+      - Remove packages : "user_guide/remove_packages.md"
+    - Syncing Environment:
+      - Sync local environment : "user_guide/sync_env.md"
+    - Lock Environment:
+      - Lock file for any environment : "user_guide/lock_existing_env.md"
+    - Solvers:
+      - Use different solver: "user_guide/changing_solvers.md"
+    - Transaction & Revision Summaries:
+      - Environment summary: "user_guide/summary.md"
+    - Settings and Configurations:
+      - Configurations : "user_guide/configuration.md"
+      - Autocompletions : "user_guide/autocomplete.md"
   - Release Notes : "release_notes.md"
   - License : "license.md"
 

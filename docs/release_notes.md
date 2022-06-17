@@ -50,7 +50,7 @@ $ ezconda create --file sciml.yml
     - If the specifications of the system do not match the lock file specifications, the `recreate` does not go forward. `create` should be used in that case.
 
     !!! Note
-        This is different from how `conda` does explicit installtions. See [docs](user_guide/recreate_env.md#lock-file-validation) for more information.
+        This is different from how `conda` does explicit installtions. See docs for more information.
     
 - Lock files also have a new `toml` based file format and new fields containing system specifications and other metadata.
 
@@ -169,7 +169,7 @@ Create, manage and re-create environments with an intuitive CLI.
     - [`create`](user_guide/create_new_env.md)
     - [`install`](user_guide/install_packages.md)
     - [`remove`](user_guide/remove_packages.md)
-    - [`recreate`](user_guide/recreate_env.md)
+    - [`recreate`]()
 - [Autocompletions](user_guide/autocomplete.md) in your shell.
 
 ### :book: Documentation
