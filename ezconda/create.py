@@ -163,5 +163,5 @@ def create(
 
         console.print(f"[bold green] :star: Done!")
 
-        if summary:
-            get_summary_for_revision(name)
+    if summary:
+        get_summary_for_revision(name)

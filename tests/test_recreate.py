@@ -1,6 +1,4 @@
-import sys
 import os
-import json
 import pytest
 from typer.testing import CliRunner
 from ezconda.main import app
