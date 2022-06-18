@@ -71,7 +71,7 @@ def update(
             console.print(f"[yellow]{str(p.stdout)}")
 
         console.print(
-            f"[bold green] :white_heavy_check_mark: '{env_name}' upadated!"
+            f"[bold green] :white_heavy_check_mark: '{env_name}' updated!"
         )
 
         if lock:
