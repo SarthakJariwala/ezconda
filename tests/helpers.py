@@ -36,15 +36,16 @@ def check_if_pkg_is_installed(env_name, pkg_name, channel=None):
 def check_if_pkgs_are_listed_in_specfile(specfile, pkgs):
     with open(specfile, "r") as f:
         env_specs = yaml.load(f, Loader=yaml.FullLoader)
-        
+
         if not isinstance(pkgs, list):
             pkgs = [pkgs]
-        
+
         for pkg in pkgs:
             assert pkg in env_specs["dependencies"]
+
 
 def check_if_channel_is_listed_in_specfile(specfile, channel):
     with open(specfile, "r") as f:
         env_specs = yaml.load(f, Loader=yaml.FullLoader)
-        
+
         assert channel in env_specs["channels"]

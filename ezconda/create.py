@@ -27,7 +27,10 @@ def create(
     ),
     solver: Solver = typer.Option(None, help="Solver to use", case_sensitive=False),
     file: Optional[Path] = typer.Option(
-        None, "--file", "-f", help="Name of the environment specifications (.yml) file or lock file (.lock)"
+        None,
+        "--file",
+        "-f",
+        help="Name of the environment specifications (.yml) file or lock file (.lock)",
     ),
     summary: bool = typer.Option(
         True, "--summary", help="Show summary of changes made"

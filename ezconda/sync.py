@@ -59,10 +59,10 @@ def sync(
         solver = get_default_solver()
 
     if sync_with == SyncFile.lockfile:
-        
+
         if file is None:
             file = Path(f"{env_name}-{sys.platform}-{platform.machine()}.lock")
-        
+
         read_lock_file_and_install(file, solver, verbose, env_name)
 
         console.print(
