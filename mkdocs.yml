@@ -57,6 +57,8 @@ nav:
       - Remove packages : "user_guide/remove_packages.md"
     - Syncing Environment:
       - Sync local environment : "user_guide/sync_env.md"
+    - Update Packages & Environment:
+      - Update complete environment : "user_guide/update_environment.md"
     - Lock Environment:
       - Lock file for any environment : "user_guide/lock_existing_env.md"
     - Solvers:
