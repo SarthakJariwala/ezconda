@@ -10,6 +10,7 @@ from .remove import remove
 from .config import config
 from .summary import summary
 from .sync import sync
+from .update import update
 from .experimental.lock import lock
 
 
@@ -23,6 +24,7 @@ app.command()(remove)
 app.command()(lock)
 app.command()(summary)
 app.command()(sync)
+app.command()(update)
 app.command()(config)
 # app.command()(show)
 
