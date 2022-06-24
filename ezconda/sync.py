@@ -12,7 +12,7 @@ from .solver import Solver
 from .config import get_default_solver
 from .summary import get_summary_for_revision
 from .experimental import write_lock_file
-from .recreate import read_lock_file_and_install
+from .files.lockfile import read_lock_file_and_install
 
 
 class SyncFile(str, Enum):

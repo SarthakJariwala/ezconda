@@ -9,14 +9,7 @@ runner = CliRunner()
 
 
 @pytest.mark.usefixtures("clean_up_env_after_test")
-def test_recreate_env_with_not_a_file(clean_up_env_after_test):
-    result = runner.invoke(app, ["recreate", "non_existing_file"])
-
-    assert "Lock file provided does not exist" in result.stdout
-
-
-@pytest.mark.usefixtures("clean_up_env_after_test")
-def test_recreate_wo_env_name(clean_up_env_after_test):
+def test_create_from_lockfile_wo_env_name(clean_up_env_after_test):
     _ = runner.invoke(
         app, ["create", "-n", "test", "-c", "conda-forge", "python=3.9", "typer"]
     )
@@ -24,14 +17,14 @@ def test_recreate_wo_env_name(clean_up_env_after_test):
     for file in os.listdir():
         if file.endswith(".lock") and file != "poetry.lock":
             lock_file = file
-    result = runner.invoke(app, ["recreate", lock_file])
+    result = runner.invoke(app, ["create", "-f", lock_file])
 
     check_if_env_is_created("test")
     check_if_pkg_is_installed("test", "typer", channel="conda-forge")
 
 
 @pytest.mark.usefixtures("clean_up_env_after_test")
-def test_recreate_w_env_name(clean_up_env_after_test):
+def test_create_from_lockfile_w_env_name(clean_up_env_after_test):
     _ = runner.invoke(
         app, ["create", "-n", "test", "-c", "conda-forge", "python=3.9", "typer"]
     )
@@ -40,7 +33,7 @@ def test_recreate_w_env_name(clean_up_env_after_test):
         if file.endswith(".lock") and file != "poetry.lock":
             lock_file = file
     env_name = "test2"
-    result = runner.invoke(app, ["recreate", lock_file, "-n", env_name])
+    result = runner.invoke(app, ["create", "-f", lock_file, "-n", env_name])
 
     check_if_env_is_created("test2")
     check_if_pkg_is_installed("test2", "typer", channel="conda-forge")

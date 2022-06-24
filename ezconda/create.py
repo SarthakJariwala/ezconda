@@ -4,7 +4,7 @@ import typer
 from typing import List, Optional
 from pathlib import Path
 
-from ezconda.recreate import read_lock_file_and_install
+from .files.lockfile import read_lock_file_and_install
 
 from .console import console
 from ._utils import create_initial_env_specs, write_env_file, read_env_file

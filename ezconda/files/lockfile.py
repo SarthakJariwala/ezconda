@@ -4,14 +4,16 @@ import sys
 import subprocess
 import json
 import platform
+import tempfile
 import typer
 
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Optional
 
 from tomlkit.toml_document import TOMLDocument
 
 from ..console import console
+from ..solver import Solver
 
 
 class LockFile:
@@ -138,3 +140,72 @@ class LockFile:
                 )
             )
             raise typer.Exit()
+
+
+def read_lock_file_and_install(
+    lock_file: Path,
+    solver: Solver,
+    verbose: bool,
+    env_name: Optional[str] = None,
+) -> None:
+    """
+    Reads lock file, verifies the content and creates a new environment
+    with packages specifed in the lock file.
+    """
+
+    with console.status(f"[magenta]Reading lock file") as status:
+
+        l = LockFile()
+        complete_specs = l.read_lock_file(lock_file)
+
+        l.verify_lock_file_contents(complete_specs)
+
+        if env_name is None:
+            env_name = complete_specs["environment"]["name"]
+
+        explicit_specs = [
+            f"{pkg['base_url']}/{pkg['platform']}/{pkg['dist_name']}"
+            for pkg in complete_specs["packages"]
+            if not pkg["channel"].startswith("pypi")
+        ]
+
+        explicit_specs = [
+            spec + ".conda"
+            if spec.startswith("https://repo.anaconda.com")
+            else spec + ".tar.bz2"
+            for spec in explicit_specs
+        ]
+
+        with tempfile.NamedTemporaryFile() as f:
+            f.write(bytes("@EXPLICIT\n", "utf-8"))
+            f.writelines([bytes(specs + "\n", "utf-8") for specs in explicit_specs])
+            f.flush()
+
+            status.update(f"[magenta]Creating new conda environment {env_name}")
+
+            p = subprocess.run(
+                [
+                    f"{solver.value}",
+                    "create",
+                    "-n",
+                    env_name,
+                    "--file",
+                    f"{f.name}",
+                    "-y",
+                ],
+                capture_output=True,
+                text=True,
+            )
+
+            if verbose:
+                console.print(f"[bold yellow]{p.stdout}")
+
+            if p.returncode != 0:
+                console.print("[red]" + str(p.stdout + p.stderr))
+                raise typer.Exit()
+
+        # TODO: Add installation for pypi channels/packages
+
+        console.print(
+            f"[bold green] :rocket: Created '{env_name}' environment from lock file",
+        )

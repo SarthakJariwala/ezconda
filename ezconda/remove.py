@@ -1,6 +1,5 @@
 import subprocess
 import typer
-import time
 import json
 import os
 import conda.exports

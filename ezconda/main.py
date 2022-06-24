@@ -7,7 +7,6 @@ from .console import console
 from .create import create
 from .install import install
 from .remove import remove
-from .recreate import recreate
 from .config import config
 from .summary import summary
 from .sync import sync
@@ -21,7 +20,6 @@ app = typer.Typer(
 app.command()(create)
 app.command()(install)
 app.command()(remove)
-app.command()(recreate)
 app.command()(lock)
 app.command()(summary)
 app.command()(sync)
