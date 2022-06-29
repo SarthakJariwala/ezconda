@@ -171,3 +171,8 @@ def create(
 
         if summary:
             get_summary_for_revision(name)
+    
+    else:
+        if not Path(file).is_file():
+            console.print("[bold red]File provided does not exist")
+            raise typer.Exit()

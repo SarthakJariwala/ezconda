@@ -1,4 +1,5 @@
 import os
+from unittest import result
 import pytest
 import typer
 from typer.testing import CliRunner
@@ -7,6 +8,14 @@ from .helpers import check_if_env_is_created, check_if_pkg_is_installed
 
 
 runner = CliRunner()
+
+
+@pytest.mark.usefixtures("clean_up_env_after_test")
+def test_create_w_non_existing_file(clean_up_env_after_test):
+    result = runner.invoke(
+        app, ["create", "-f", "does_not_exist.lock"]
+    )
+    assert "File provided does not exist" in result.stdout
 
 
 @pytest.mark.usefixtures("clean_up_env_after_test")
