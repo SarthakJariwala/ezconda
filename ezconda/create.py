@@ -4,7 +4,7 @@ import typer
 from typing import List, Optional
 from pathlib import Path
 
-from ezconda.recreate import read_lock_file_and_install
+from .files.lockfile import read_lock_file_and_install
 
 from .console import console
 from ._utils import create_initial_env_specs, write_env_file, read_env_file
@@ -27,7 +27,10 @@ def create(
     ),
     solver: Solver = typer.Option(None, help="Solver to use", case_sensitive=False),
     file: Optional[Path] = typer.Option(
-        None, "--file", "-f", help="Name of the environment specifications (.yml) file or lock file (.lock)"
+        None,
+        "--file",
+        "-f",
+        help="Name of the environment specifications (.yml) file or lock file (.lock)",
     ),
     summary: bool = typer.Option(
         True, "--summary", help="Show summary of changes made"
@@ -127,11 +130,14 @@ def create(
                 status.update(f"[magenta]Writing lock file")
 
                 write_lock_file(name)
+        
+        if summary:
+            get_summary_for_revision(name)
 
     elif file.is_file():
         # create from lock file
         if file.suffix == ".lock":
-            read_lock_file_and_install(file, solver, verbose, name)
+            name = read_lock_file_and_install(file, solver, verbose, name)
         else:
             # create from yml spec file
             with console.status(
@@ -163,5 +169,10 @@ def create(
 
         console.print(f"[bold green] :star: Done!")
 
-    if summary:
-        get_summary_for_revision(name)
+        if summary:
+            get_summary_for_revision(name)
+    
+    else:
+        if not Path(file).is_file():
+            console.print("[bold red]File provided does not exist")
+            raise typer.Exit()

@@ -3,7 +3,12 @@ import pytest
 from typer.testing import CliRunner
 from pathlib import Path
 from ezconda.main import app
-from .helpers import check_if_channel_is_listed_in_specfile, check_if_env_is_created, check_if_pkg_is_installed, check_if_pkgs_are_listed_in_specfile
+from .helpers import (
+    check_if_channel_is_listed_in_specfile,
+    check_if_env_is_created,
+    check_if_pkg_is_installed,
+    check_if_pkgs_are_listed_in_specfile,
+)
 
 
 runner = CliRunner()
@@ -47,7 +52,9 @@ def test_create_w_pkg_install(clean_up_env_after_test):
 
 @pytest.mark.usefixtures("clean_up_env_after_test")
 def test_create_w_pkg_install_w_channel(clean_up_env_after_test):
-    result = runner.invoke(app, ["create", "-n", "test", "-c", "conda-forge", "python=3.9", "numpy"])
+    result = runner.invoke(
+        app, ["create", "-n", "test", "-c", "conda-forge", "python=3.9", "numpy"]
+    )
 
     assert Path("test.yml").is_file()
     check_if_env_is_created("test")
@@ -63,6 +70,7 @@ def test_create_env_from_yml_file(clean_up_env_after_test):
     assert result.exit_code == 0
     check_if_env_is_created("test")
 
+
 @pytest.mark.usefixtures("clean_up_env_after_test")
 def test_create_env_from_lock_file(clean_up_env_after_test):
     _ = runner.invoke(
@@ -72,7 +80,7 @@ def test_create_env_from_lock_file(clean_up_env_after_test):
     for file in os.listdir():
         if file.endswith(".lock") and file != "poetry.lock":
             lock_file = file
-    
+
     result = runner.invoke(app, ["create", "--name", "test2", "--file", lock_file])
 
     check_if_env_is_created("test2")

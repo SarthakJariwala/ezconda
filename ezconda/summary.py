@@ -85,5 +85,5 @@ def get_summary_for_revision(name: str, revision_no: int = -1):
 
     if _installed or _upgraded or _downgraded or _removed:
         console.print(tree)
-    
+
     return _installed, _upgraded, _downgraded, _removed

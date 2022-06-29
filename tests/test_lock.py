@@ -2,9 +2,7 @@ import subprocess
 import os
 import sys
 import platform
-import pytest
 from typer.testing import CliRunner
-from pathlib import Path
 from ezconda.main import app
 
 

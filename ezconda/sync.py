@@ -12,7 +12,7 @@ from .solver import Solver
 from .config import get_default_solver
 from .summary import get_summary_for_revision
 from .experimental import write_lock_file
-from .recreate import read_lock_file_and_install
+from .files.lockfile import read_lock_file_and_install
 
 
 class SyncFile(str, Enum):
@@ -59,10 +59,10 @@ def sync(
         solver = get_default_solver()
 
     if sync_with == SyncFile.lockfile:
-        
+
         if file is None:
             file = Path(f"{env_name}-{sys.platform}-{platform.machine()}.lock")
-        
+
         read_lock_file_and_install(file, solver, verbose, env_name)
 
         console.print(

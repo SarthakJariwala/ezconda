@@ -18,7 +18,7 @@ def update(
         "-n",
         prompt="Name of the environment to update",
         help="Name of the environment to update",
-    ),    
+    ),
     file: Optional[Path] = typer.Option(
         None,
         "--file",
@@ -39,14 +39,12 @@ def update(
     """
     if solver is None:
         solver = get_default_solver()
-    
+
     with console.status(f"[magenta]Validating environment and file") as status:
 
         file = get_validate_file_name(env_name, file)
 
-        status.update(
-            f"[magenta]Updating environment '{env_name}' with file '{file}'"
-        )
+        status.update(f"[magenta]Updating environment '{env_name}' with file '{file}'")
 
         p = subprocess.run(
             [
@@ -70,9 +68,7 @@ def update(
         if verbose:
             console.print(f"[yellow]{str(p.stdout)}")
 
-        console.print(
-            f"[bold green] :white_heavy_check_mark: '{env_name}' updated!"
-        )
+        console.print(f"[bold green] :white_heavy_check_mark: '{env_name}' updated!")
 
         if lock:
             status.update(f"[magenta]Updating lock file")
