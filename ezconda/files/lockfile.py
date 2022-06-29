@@ -80,16 +80,7 @@ class LockFile:
 
         console.print(f"[bold green] :lock: Lock file '{lockfile_name}' generated")
 
-    def _check_lock_file_exists(self, lock_file: Path):
-        """If lock file does not exist, exit the app"""
-
-        if not lock_file.is_file():
-            console.print("[bold red]Lock file provided does not exist")
-            raise typer.Exit()
-
     def read_lock_file(self, lock_file: Path) -> TOMLDocument:
-
-        self._check_lock_file_exists(lock_file)
 
         with open(lock_file, "r") as f:
             doc = tomlkit.loads(f.read())
@@ -147,10 +138,10 @@ def read_lock_file_and_install(
     solver: Solver,
     verbose: bool,
     env_name: Optional[str] = None,
-) -> None:
+) -> str:
     """
     Reads lock file, verifies the content and creates a new environment
-    with packages specifed in the lock file.
+    with packages specifed in the lock file and returns the environment name.
     """
 
     with console.status(f"[magenta]Reading lock file") as status:
@@ -209,3 +200,5 @@ def read_lock_file_and_install(
         console.print(
             f"[bold green] :rocket: Created '{env_name}' environment from lock file",
         )
+    
+    return env_name

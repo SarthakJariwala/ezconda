@@ -1,11 +1,18 @@
 import os
 import pytest
+import typer
 from typer.testing import CliRunner
 from ezconda.main import app
 from .helpers import check_if_env_is_created, check_if_pkg_is_installed
 
 
 runner = CliRunner()
+
+
+# @pytest.mark.usefixtures("clean_up_env_after_test")
+# def test_create_env_with_not_a_lockfile(clean_up_env_after_test):
+#     with pytest.raises(typer.Exit):
+#         _ = runner.invoke(app, ["create", "--file", "non_existing_file.lock"])
 
 
 @pytest.mark.usefixtures("clean_up_env_after_test")

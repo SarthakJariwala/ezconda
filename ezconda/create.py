@@ -130,11 +130,14 @@ def create(
                 status.update(f"[magenta]Writing lock file")
 
                 write_lock_file(name)
+        
+        if summary:
+            get_summary_for_revision(name)
 
     elif file.is_file():
         # create from lock file
         if file.suffix == ".lock":
-            read_lock_file_and_install(file, solver, verbose, name)
+            name = read_lock_file_and_install(file, solver, verbose, name)
         else:
             # create from yml spec file
             with console.status(
@@ -166,5 +169,5 @@ def create(
 
         console.print(f"[bold green] :star: Done!")
 
-    if summary:
-        get_summary_for_revision(name)
+        if summary:
+            get_summary_for_revision(name)
