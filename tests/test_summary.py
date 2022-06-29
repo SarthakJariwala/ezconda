@@ -1,6 +1,5 @@
 from unittest import runner
 import pytest
-import subprocess
 from typer.testing import CliRunner
 from ezconda.main import app
 from ezconda.summary import get_summary_for_revision

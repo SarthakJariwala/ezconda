@@ -1,7 +1,5 @@
 import os
-from unittest import result
 import pytest
-import typer
 from typer.testing import CliRunner
 from ezconda.main import app
 from .helpers import check_if_env_is_created, check_if_pkg_is_installed
