@@ -7,7 +7,7 @@ from pathlib import Path
 from .files.lockfile import read_lock_file_and_install
 
 from .console import console
-from ._utils import create_initial_env_specs, write_env_file, read_env_file
+from ._utils import create_initial_env_specs, write_env_file, read_env_file, run_command
 from .solver import Solver
 from .summary import get_summary_for_revision
 from .experimental import write_lock_file
@@ -87,34 +87,21 @@ def create(
                 )
 
             if not channel:
-                p = subprocess.run(
-                    [f"{solver.value}", "create", "-n", name, *packages, "-y"],
-                    capture_output=True,
-                    text=True,
-                )
+                cmd = [f"{solver.value}", "create", "-n", name, *packages, "-y"]
 
             else:
-                p = subprocess.run(
-                    [
-                        f"{solver.value}",
-                        "create",
-                        "-n",
-                        name,
-                        "--channel",
-                        channel,
-                        *packages,
-                        "-y",
-                    ],
-                    capture_output=True,
-                    text=True,
-                )
+                cmd = [
+                    f"{solver.value}",
+                    "create",
+                    "-n",
+                    name,
+                    "--channel",
+                    channel,
+                    *packages,
+                    "-y",
+                ]
 
-            if p.returncode != 0:
-                console.print(f"[red]{str(p.stdout + p.stderr)}")
-                raise typer.Exit()
-
-            if verbose:
-                console.print(f"[bold yellow]{str(p.stdout)}")
+            run_command(cmd, verbose=verbose)
 
             console.print(f"[bold green] :rocket: Created '{name}' environment")
 
@@ -144,15 +131,8 @@ def create(
                 f"[magenta]Creating new conda environment using {file}"
             ) as status:
 
-                p = subprocess.run(
-                    [f"{solver.value}", "env", "create", "--file", file],
-                    capture_output=True,
-                    text=True,
-                )
-
-                if p.returncode != 0:
-                    console.print(f"[red]{str(p.stdout + p.stderr)}")
-                    raise typer.Exit()
+                cmd = [f"{solver.value}", "env", "create", "--file", file]
+                run_command(cmd, verbose=verbose)
 
                 # get env name from yml file
                 name = read_env_file(file)["name"]
@@ -163,9 +143,6 @@ def create(
                 ):  # only write lock file if packages are mentioned during env creation
                     status.update(f"[magenta]Writing lock file")
                     write_lock_file(name)
-
-                if verbose:
-                    console.print(f"[bold yellow]{str(p.stdout)}")
 
         console.print(f"[bold green] :star: Done!")
 
