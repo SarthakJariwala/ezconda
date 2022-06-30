@@ -15,12 +15,8 @@ def run_command(
     verbose: bool = False,
     capture_output: bool = True,
     text: bool = True,
-    ):
-    output = subprocess.run(
-        command,
-        capture_output=capture_output,
-        text=text
-    )
+):
+    output = subprocess.run(command, capture_output=capture_output, text=text)
 
     if output.returncode != 0:
         console.print(f"[red]{str(output.stdout + output.stderr)}")
@@ -28,7 +24,7 @@ def run_command(
 
     if verbose:
         console.print(f"[bold yellow]{str(output.stdout)}")
-    
+
     return output
 
 

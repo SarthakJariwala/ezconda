@@ -56,7 +56,7 @@ def update(
             file,
             "--prune",
         ]
-        
+
         run_command(cmd, verbose=verbose)
 
         console.print(f"[bold green] :white_heavy_check_mark: '{env_name}' updated!")

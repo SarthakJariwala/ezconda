@@ -74,7 +74,7 @@ def install(
                 *pkg_name,
                 "-y",
             ]
-        
+
         run_command(cmd, verbose=verbose)
 
         console.print(f"[bold green] :rocket: Installed packages in {env_name}")
