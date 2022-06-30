@@ -14,6 +14,7 @@ from ._utils import (
     write_env_file,
     update_channels_after_removal,
     recheck_dependencies,
+    run_command,
 )
 from .solver import Solver
 from .config import get_default_solver
@@ -83,25 +84,16 @@ def remove(
         if solver is None:
             solver = get_default_solver()
 
-        p = subprocess.run(
-            [
-                f"{solver.value}",
-                "remove",
-                "-n",
-                env_name,
-                *pkg_name,
-                "-y",
-            ],
-            capture_output=True,
-            text=True,
-        )
+        cmd = [
+            f"{solver.value}",
+            "remove",
+            "-n",
+            env_name,
+            *pkg_name,
+            "-y",
+        ]
 
-        if p.returncode != 0:
-            console.print(f"[red]{str(p.stdout + p.stderr)}")
-            raise typer.Exit()
-
-        if verbose:
-            console.print(f"[yellow]{str(p.stdout)}")
+        run_command(cmd, verbose=verbose)
 
         env_specs = update_channels_after_removal(env_specs, env_name)
 

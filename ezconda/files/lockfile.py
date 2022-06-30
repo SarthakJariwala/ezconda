@@ -1,7 +1,6 @@
 from textwrap import dedent
 import tomlkit
 import sys
-import subprocess
 import json
 import platform
 import tempfile
@@ -14,6 +13,7 @@ from tomlkit.toml_document import TOMLDocument
 
 from ..console import console
 from ..solver import Solver
+from .._utils import run_command
 
 
 class LockFile:
@@ -43,18 +43,11 @@ class LockFile:
     def _add_current_packages(self, env_name: str) -> Dict:
         """Get current installed packages in the named environment"""
 
-        p = subprocess.run(
-            ["conda", "list", "-n", env_name, "--json"],
-            capture_output=True,
-            text=True,
-        )
+        cmd = ["conda", "list", "-n", env_name, "--json"]
 
-        # exit the app if error occurs
-        if p.returncode != 0:
-            console.print(f"[red]{str(p.stdout + p.stderr)}")
-            raise typer.Exit()
+        result = run_command(cmd, verbose=False)
 
-        packages = json.loads(p.stdout)
+        packages = json.loads(result.stdout)
 
         # store environment name
         _env_table = tomlkit.table()
@@ -174,26 +167,17 @@ def read_lock_file_and_install(
 
             status.update(f"[magenta]Creating new conda environment {env_name}")
 
-            p = subprocess.run(
-                [
-                    f"{solver.value}",
-                    "create",
-                    "-n",
-                    env_name,
-                    "--file",
-                    f"{f.name}",
-                    "-y",
-                ],
-                capture_output=True,
-                text=True,
-            )
+            cmd = [
+                f"{solver.value}",
+                "create",
+                "-n",
+                env_name,
+                "--file",
+                f"{f.name}",
+                "-y",
+            ]
 
-            if verbose:
-                console.print(f"[bold yellow]{p.stdout}")
-
-            if p.returncode != 0:
-                console.print("[red]" + str(p.stdout + p.stderr))
-                raise typer.Exit()
+            result = run_command(cmd, verbose=verbose)
 
         # TODO: Add installation for pypi channels/packages
 

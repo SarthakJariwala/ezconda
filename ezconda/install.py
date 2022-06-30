@@ -10,6 +10,7 @@ from ._utils import (
     add_pkg_to_dependencies,
     write_env_file,
     add_new_channel_to_env_specs,
+    run_command,
 )
 from .solver import Solver
 from .config import get_default_solver
@@ -61,33 +62,20 @@ def install(
         status.update(f"[magenta]Resolving & Installing packages using {solver.value}")
 
         if not channel:
-            p = subprocess.run(
-                [f"{solver.value}", "install", "-n", env_name, *pkg_name, "-y"],
-                capture_output=True,
-                text=True,
-            )
+            cmd = [f"{solver.value}", "install", "-n", env_name, *pkg_name, "-y"]
         else:
-            p = subprocess.run(
-                [
-                    f"{solver.value}",
-                    "install",
-                    "-n",
-                    env_name,
-                    "--channel",
-                    channel,
-                    *pkg_name,
-                    "-y",
-                ],
-                capture_output=True,
-                text=True,
-            )
+            cmd = [
+                f"{solver.value}",
+                "install",
+                "-n",
+                env_name,
+                "--channel",
+                channel,
+                *pkg_name,
+                "-y",
+            ]
 
-        if p.returncode != 0:
-            console.print(f"[red]{str(p.stdout + p.stderr)}")
-            raise typer.Exit()
-
-        if verbose:
-            console.print(f"[yellow]{str(p.stdout)}")
+        run_command(cmd, verbose=verbose)
 
         console.print(f"[bold green] :rocket: Installed packages in {env_name}")
 

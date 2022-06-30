@@ -7,6 +7,7 @@ from ezconda._utils import (
     add_pkg_to_dependencies,
     add_new_channel_to_env_specs,
     remove_pkg_from_dependencies,
+    run_command,
 )
 
 
@@ -168,3 +169,8 @@ def test_remove_pkg_from_dependencies(ENV_SPECS, package, EXPECTED_SPECS):
     env_specs = remove_pkg_from_dependencies(ENV_SPECS, package)
 
     assert env_specs == EXPECTED_SPECS
+
+
+def test_run_command_w_verbose():
+    result = run_command(["echo", "hello world!"], verbose=True)
+    assert "hello world!" in result.stdout

@@ -10,6 +10,24 @@ from textwrap import dedent
 from .console import console
 
 
+def run_command(
+    command: List[str],
+    verbose: bool = False,
+    capture_output: bool = True,
+    text: bool = True,
+):
+    output = subprocess.run(command, capture_output=capture_output, text=text)
+
+    if output.returncode != 0:
+        console.print(f"[red]{str(output.stdout + output.stderr)}")
+        raise typer.Exit()
+
+    if verbose:
+        console.print(f"[bold yellow]{str(output.stdout)}")
+
+    return output
+
+
 def create_initial_env_specs(
     env_name: str, channel: Optional[str] = None, packages: Optional[List[str]] = None
 ) -> Dict:

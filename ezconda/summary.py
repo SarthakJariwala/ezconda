@@ -1,11 +1,11 @@
 import json
-import subprocess
 from textwrap import dedent
 import typer
 
 from rich.tree import Tree
 
 from .console import console
+from ._utils import run_command
 
 
 def summary(
@@ -35,14 +35,13 @@ def get_summary_for_revision(name: str, revision_no: int = -1):
     By default, it will show the latest revision.
     """
 
-    p = subprocess.run(
+    output = run_command(
         ["conda", "list", "--revision", "-n", name, "--json"],
-        capture_output=True,
-        text=True,
+        verbose=False,
     )
 
     # summary info
-    _rev_data = json.loads(p.stdout)
+    _rev_data = json.loads(output.stdout)
 
     try:
         _info = _rev_data[revision_no]

@@ -4,7 +4,7 @@ from typing import Optional
 from pathlib import Path
 
 from .console import console
-from ._utils import get_validate_file_name
+from ._utils import get_validate_file_name, run_command
 from .solver import Solver
 from .config import get_default_solver
 from .summary import get_summary_for_revision
@@ -46,27 +46,18 @@ def update(
 
         status.update(f"[magenta]Updating environment '{env_name}' with file '{file}'")
 
-        p = subprocess.run(
-            [
-                f"{solver.value}",
-                "env",
-                "update",
-                "-n",
-                env_name,
-                "--file",
-                file,
-                "--prune",
-            ],
-            capture_output=True,
-            text=True,
-        )
+        cmd = [
+            f"{solver.value}",
+            "env",
+            "update",
+            "-n",
+            env_name,
+            "--file",
+            file,
+            "--prune",
+        ]
 
-        if p.returncode != 0:
-            console.print(f"[red]{str(p.stdout + p.stderr)}")
-            raise typer.Exit()
-
-        if verbose:
-            console.print(f"[yellow]{str(p.stdout)}")
+        run_command(cmd, verbose=verbose)
 
         console.print(f"[bold green] :white_heavy_check_mark: '{env_name}' updated!")
 
