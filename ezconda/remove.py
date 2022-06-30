@@ -18,6 +18,7 @@ from ._utils import (
 )
 from .solver import Solver
 from .config import get_default_solver
+from .summary import get_summary_for_revision
 from .experimental import write_lock_file
 
 
@@ -33,6 +34,9 @@ def remove(
     solver: Solver = typer.Option(None, help="Solver to use", case_sensitive=False),
     file: Optional[str] = typer.Option(
         None, "--file", "-f", help="'.yml' file to update with removed packages"
+    ),
+    summary: bool = typer.Option(
+        True, "--summary", help="Show summary of changes made"
     ),
     verbose: Optional[bool] = typer.Option(
         False, "--verbose", "-v", help="Display standard output from conda"
@@ -113,3 +117,6 @@ def remove(
             write_lock_file(env_name)
 
         console.print(f"[bold green] :star: Done!")
+
+        if summary:
+            get_summary_for_revision(env_name)
