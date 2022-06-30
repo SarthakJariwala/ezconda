@@ -174,10 +174,3 @@ def test_remove_pkg_from_dependencies(ENV_SPECS, package, EXPECTED_SPECS):
 def test_run_command_w_verbose():
     result = run_command(["echo", "hello world!"], verbose=True)
     assert "hello world!" in result.stdout
-
-
-def test_run_command_w_non_zero_return_code():
-    # run a command that does not exist
-    result = run_command(["t"])
-    assert result.exit_code != 0
-    assert "command not found" in result.stdout
