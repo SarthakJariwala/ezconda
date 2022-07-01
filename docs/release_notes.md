@@ -1,6 +1,37 @@
 # Release Notes
 
 
+## :sparkles: **v0.8.0**
+
+### :rocket: Features
+
+* Add `update` command  (#36) @SarthakJariwala
+
+<div class="termy">
+
+```console
+$ ezconda update -n sciml
+
+// Update `sciml` environment according to `sciml.yml`
+```
+</div>
+
+* Add summary option to `remove` command (#41) @SarthakJariwala
+
+### :fire: Removals and Deprecations
+
+* Remove `recreate` command (#37) @SarthakJariwala
+> `recreate` was deprecated in v0.7.0.
+
+### :hammer: Refactoring
+
+* Refactor `subprocess.run` calls (#38) @SarthakJariwala
+
+### :rotating_light: Testing
+
+* Improve test coverage for `remove` command (#41) @SarthakJariwala
+
+
 ## :sparkles: **v0.7.0**
 
 Requires Python>=3.7
