@@ -48,7 +48,9 @@ dependencies:
 
 ## Dependencies
 
-**EZconda** performs informed package removal. Let's say you have installed both `numpy` and `pandas` in your environment and the specification file looks like the following - 
+**EZconda** performs informed package removal.
+
+Let's say you have installed both `numpy` and `pandas` in your environment and the specification file looks like the following - 
 
 ```YAML title="new-proj.yml" hl_lines="6 7"
 name: new-proj
@@ -70,9 +72,12 @@ Check it out -
 $ ezconda remove -n new-proj numpy
 
 // Identifies dependent packages
-There are packages that depend on ('numpy',)
-Removing ('numpy',) will also remove the following:.
-['pandas']
+There are packages that depend on 'numpy'
+
+Removing 'numpy' will also remove them!
+
+numpy is required by
+- pandas
 
 // Asks before continuing
 Do you want to continue? [y/N]: 
