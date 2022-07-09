@@ -10,9 +10,7 @@ runner = CliRunner()
 
 @pytest.mark.usefixtures("clean_up_env_after_test")
 def test_create_w_non_existing_file(clean_up_env_after_test):
-    result = runner.invoke(
-        app, ["create", "-f", "does_not_exist.lock"]
-    )
+    result = runner.invoke(app, ["create", "-f", "does_not_exist.lock"])
     assert "File provided does not exist" in result.stdout
 
 

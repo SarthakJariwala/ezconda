@@ -53,13 +53,14 @@ def remove(
     with console.status(f"[magenta]Validating file, packages, channels") as status:
         file = get_validate_file_name(env_name, file)
         env_specs = read_env_file(file)
-        channels = env_specs["channels"]
+        env_specs = remove_pkg_from_dependencies(env_specs, pkg_name)
 
+        channels = env_specs["channels"]
         installed_packages = [
             specs["name"]
             for specs in json.load(os.popen(f"conda list -n {env_name} --json"))
         ]
-        
+
         for pkg in pkg_name:
             cmd = ["mamba", "repoquery", "whoneeds"]
             for chn in channels:
@@ -73,23 +74,26 @@ def remove(
             dependent_pkgs_info = formatted_output["result"]["pkgs"]
 
             if dependent_pkgs_info:
-                dependent_pkgs = [p['name'] for p in dependent_pkgs_info]
+                dependent_pkgs = [p["name"] for p in dependent_pkgs_info]
                 # check if any of the installed packages require this as dep
-                intersection_pkgs = set(dependent_pkgs).intersection(set(installed_packages))
-                
+                intersection_pkgs = set(dependent_pkgs).intersection(
+                    set(installed_packages)
+                )
+
                 if intersection_pkgs:
                     tree = Tree(f"[bold yellow]{pkg} is required by[/]")
-                    console.print(f"[bold magenta] :warning: There are packages that depend on {pkg}\n")
-                    console.print(f"[bold magenta] :warning: Removing {pkg} will also remove them!\n")
+                    console.print(
+                        f"[bold magenta] :warning: There are packages that depend on {pkg}\n"
+                    )
+                    console.print(
+                        f"[bold magenta] :warning: Removing {pkg} will also remove them!\n"
+                    )
                     for dep_pk in intersection_pkgs:
                         tree.add(f"[bold yellow]{dep_pk}[/]")
                     console.print(tree)
                     status.stop()
                     typer.confirm(f"Do you want to continue?", abort=True)
                     status.start()
-
-        env_specs = read_env_file(file)
-        env_specs = remove_pkg_from_dependencies(env_specs, pkg_name)
 
         status.update("[magenta]Removing packages")
 
@@ -113,7 +117,9 @@ def remove(
         # if so, remove them from .yml file
         env_specs = recheck_dependencies(env_specs, env_name)
 
-        console.print(f"[bold green] :cross_mark_button: Removed packages from {env_name}")
+        console.print(
+            f"[bold green] :cross_mark_button: Removed packages from {env_name}"
+        )
 
         status.update(f"[magenta]Writing specifications to {file}")
         write_env_file(env_specs, file)
