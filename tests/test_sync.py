@@ -5,7 +5,7 @@ import platform
 from typer.testing import CliRunner
 from ezconda.main import app
 from ezconda._utils import read_env_file, add_pkg_to_dependencies, write_env_file
-from .test_install import check_if_pkg_is_installed
+from .helpers import check_if_pkg_is_installed
 
 
 runner = CliRunner()

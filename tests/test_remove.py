@@ -14,8 +14,8 @@ def test_remove_single_pkg(clean_up_env_after_test):
     )
     result = runner.invoke(app, ["remove", "-n", "test", "typer"])
 
-    assert "Removed packages from test" in result.stdout
-    assert "Updated specifications in 'test.yml'" in result.stdout
+    with pytest.raises(AssertionError):
+        check_if_pkg_is_installed("test", "typer")
 
 
 @pytest.mark.usefixtures("clean_up_env_after_test")
@@ -26,8 +26,9 @@ def test_remove_multiple_pkgs(clean_up_env_after_test):
     )
     result = runner.invoke(app, ["remove", "-n", "test", "typer", "numpy"])
 
-    assert "Removed packages from test" in result.stdout
-    assert "Updated specifications in 'test.yml'" in result.stdout
+    with pytest.raises(AssertionError):
+        check_if_pkg_is_installed("test", "typer")
+        check_if_pkg_is_installed("test", "numpy")
 
 
 @pytest.mark.usefixtures("clean_up_env_after_test")

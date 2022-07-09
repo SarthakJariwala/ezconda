@@ -69,6 +69,7 @@ def test_create_env_from_yml_file(clean_up_env_after_test):
 
     assert result.exit_code == 0
     check_if_env_is_created("test")
+    check_if_pkg_is_installed("test", "python")
 
 
 @pytest.mark.usefixtures("clean_up_env_after_test")
@@ -85,3 +86,14 @@ def test_create_env_from_lock_file(clean_up_env_after_test):
 
     check_if_env_is_created("test2")
     check_if_pkg_is_installed("test2", "typer", channel="conda-forge")
+
+
+@pytest.mark.usefixtures("clean_up_env_after_test")
+def test_env_creation_when_same_name_specfile_exists(clean_up_env_after_test):
+    _ = runner.invoke(app, ["create", "-n", "test", "python=3.9"])
+
+    # try to create a new env with same name
+    _ = runner.invoke(app, ["create", "-n", "test", "python=3.9", "numpy"], input="y")
+    # new env should have numpy and overwritten specfile
+    check_if_pkg_is_installed("test", "numpy")
+    check_if_pkgs_are_listed_in_specfile("test.yml", "numpy")

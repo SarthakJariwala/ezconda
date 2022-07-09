@@ -1,9 +1,12 @@
+import sys
 import pytest
+import typer
 from typer.testing import CliRunner
 from ezconda.main import app
 from ezconda._utils import (
     read_env_file,
     create_initial_env_specs,
+    get_validate_file_name,
     add_pkg_to_dependencies,
     add_new_channel_to_env_specs,
     remove_pkg_from_dependencies,
@@ -174,3 +177,21 @@ def test_remove_pkg_from_dependencies(ENV_SPECS, package, EXPECTED_SPECS):
 def test_run_command_w_verbose():
     result = run_command(["echo", "hello world!"], verbose=True)
     assert "hello world!" in result.stdout
+
+
+def test_abort_when_filename_and_env_name_different():
+    with pytest.raises(typer.Exit):
+        get_validate_file_name(
+            "test"
+        )  # test.yml does not exist; should raise typer.Exit()
+
+
+def test_specfile_doesnot_exist():
+    with pytest.raises(typer.Exit):
+        get_validate_file_name("test", "test.yml")
+
+
+def test_remove_pkg_from_dependencies_when_none():
+    with pytest.raises(typer.Exit):
+        remove_pkg_from_dependencies({"name": "test"}, ["numpy"])
+        assert "There are no packages listed in 'test.yml' file." in sys.stdout

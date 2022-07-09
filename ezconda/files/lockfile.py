@@ -184,5 +184,5 @@ def read_lock_file_and_install(
         console.print(
             f"[bold green] :rocket: Created '{env_name}' environment from lock file",
         )
-    
+
     return env_name

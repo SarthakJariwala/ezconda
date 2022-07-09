@@ -1,26 +1,10 @@
-import subprocess
-import json
 import pytest
 from typer.testing import CliRunner
 from ezconda.main import app
+from .helpers import check_if_pkg_is_installed
 
 
 runner = CliRunner()
-
-
-def check_if_pkg_is_installed(env_name, pkg_name, channel=None):
-    pkg_specs = subprocess.run(
-        ["conda", "list", "-n", env_name, "--json"], capture_output=True
-    )
-    pkg_specs = json.loads(pkg_specs.stdout)
-
-    list_of_pkgs = [pkg["name"] for pkg in pkg_specs]
-    assert pkg_name in list_of_pkgs
-
-    if channel:
-        for pkg in pkg_specs:
-            if pkg["name"] == pkg_name:
-                assert pkg["channel"] == channel
 
 
 @pytest.mark.usefixtures("clean_up_env_after_test")
@@ -41,9 +25,7 @@ def test_verbose_install_w_conda(clean_up_env_after_test):
     )
 
     assert "Collecting package metadata (current_repodata.json):" in result.stdout
-
     assert result.exit_code == 0
-
     check_if_pkg_is_installed("test", "python")
 
 
@@ -55,7 +37,6 @@ def test_install_w_channel_and_no_existing_pkgs(clean_up_env_after_test):
     )
 
     assert result.exit_code == 0
-
     check_if_pkg_is_installed("test", "python", channel="conda-forge")
 
 
@@ -67,7 +48,6 @@ def test_install_with_existing_pkgs(clean_up_env_after_test):
     result = runner.invoke(app, ["install", "-n", "test", "-c", "conda-forge", "numpy"])
 
     assert result.exit_code == 0
-
     # check if numpy is installed from conda-forge channel
     check_if_pkg_is_installed("test", "numpy", "conda-forge")
 
