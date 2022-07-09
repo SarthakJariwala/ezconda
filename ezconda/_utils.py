@@ -77,7 +77,7 @@ def get_validate_file_name(env_name: str, file: Optional[str] = None) -> Optiona
 def read_env_file(file: str) -> Dict:
     "Read '.yml' file and return a dict containing specifications in the file."
 
-    with open(file, "r") as f:
+    with open(file, "rb") as f:
         env_specs = yaml.load(f, Loader=yaml.FullLoader)
         return env_specs
 
