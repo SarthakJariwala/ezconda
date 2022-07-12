@@ -90,7 +90,7 @@ def read_env_file(file: str) -> Dict:
 def write_env_file(env_specs: Dict, file: str) -> None:
     "Writes '.yml' file based on the specifications provided."
 
-    with open(file, "w", encoding="utf-8") as f:
+    with open(file, "wb") as f:
         out = yaml.safe_dump(env_specs, sort_keys=False)
         try:
             f.write(bytes(out, encoding="utf-8"))
