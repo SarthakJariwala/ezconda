@@ -77,7 +77,7 @@ def get_validate_file_name(env_name: str, file: Optional[str] = None) -> Optiona
 def read_env_file(file: str) -> Dict:
     "Read '.yml' file and return a dict containing specifications in the file."
 
-    with open(file, "rb") as f:
+    with open(file, "rb", errors="ignore") as f:
         yaml_binary = f.read()
         try:
             yaml_stream = yaml_binary.decode("utf-8")
@@ -90,7 +90,7 @@ def read_env_file(file: str) -> Dict:
 def write_env_file(env_specs: Dict, file: str) -> None:
     "Writes '.yml' file based on the specifications provided."
 
-    with open(file, "wb") as f:
+    with open(file, "wb", errors="ignore") as f:
         out = yaml.safe_dump(env_specs, sort_keys=False)
         try:
             f.write(bytes(out, encoding="utf-8"))
