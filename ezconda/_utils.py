@@ -82,7 +82,7 @@ def read_env_file(file: str) -> Dict:
         try:
             yaml_stream = yaml_binary.decode("utf-8")
         except UnicodeDecodeError:
-            yaml_stream = yaml_binary.decode("utf-16")
+            yaml_stream = yaml_binary.decode("cp437")
         env_specs = yaml.safe_load(yaml_stream)
         return env_specs
 
