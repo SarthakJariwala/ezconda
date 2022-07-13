@@ -20,7 +20,7 @@ def check_if_env_is_created(env_name):
 
 def check_if_pkg_is_installed(env_name, pkg_name, channel=None):
     pkg_specs = subprocess.run(
-        ["conda", "list", "-n", env_name, "--json"], capture_output=True
+        ["conda", "list", "-n", env_name, "--json"], capture_output=True, text=True
     )
     pkg_specs = json.loads(pkg_specs.stdout)
 
@@ -34,9 +34,13 @@ def check_if_pkg_is_installed(env_name, pkg_name, channel=None):
 
 
 def check_if_pkgs_are_listed_in_specfile(specfile, pkgs):
-    with open(specfile, "r") as f:
-        env_specs = yaml.load(f, Loader=yaml.FullLoader)
-
+    with open(specfile, "rb") as f:
+        yaml_binary = f.read()
+        try:
+            yaml_stream = yaml_binary.decode("utf-8")
+        except UnicodeDecodeError:
+            yaml_stream = yaml_binary.decode("utf-16")
+        env_specs = yaml.safe_load(yaml_stream)
         if not isinstance(pkgs, list):
             pkgs = [pkgs]
 
@@ -45,7 +49,12 @@ def check_if_pkgs_are_listed_in_specfile(specfile, pkgs):
 
 
 def check_if_channel_is_listed_in_specfile(specfile, channel):
-    with open(specfile, "r") as f:
-        env_specs = yaml.load(f, Loader=yaml.FullLoader)
+    with open(specfile, "rb") as f:
+        yaml_binary = f.read()
+        try:
+            yaml_stream = yaml_binary.decode("utf-8")
+        except UnicodeDecodeError:
+            yaml_stream = yaml_binary.decode("utf-16")
+        env_specs = yaml.safe_load(yaml_stream)
 
         assert channel in env_specs["channels"]

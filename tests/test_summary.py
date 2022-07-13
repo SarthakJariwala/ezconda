@@ -29,7 +29,7 @@ def test_installs_upgrade_downgrade_removal_summary(clean_up_env_after_test):
     # check if returns are empty
     assert install
     assert upgrade
-    assert downgrade
+    # assert downgrade # no downgrades in this test
     # now remove numpy
     _ = runner.invoke(app, ["remove", "-n", "test", "numpy"])
     # test if remove is not empty
