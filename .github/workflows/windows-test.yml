@@ -1,4 +1,4 @@
-name: Tests
+name: Windows Tests
 
 on:
   - push
@@ -6,19 +6,16 @@ on:
 
 jobs:
   tests:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
+    runs-on: windows-latest
     
     steps:
     - uses: actions/checkout@v2.3.4
 
-    - uses: conda-incubator/setup-miniconda@v2
+    - uses: s-weigand/setup-conda@v1
       with:
-        auto-update-conda: true
+        update-conda: true
+        conda-channels: anaconda, conda-forge
     - name: Install Packages and Run Tests
-      shell: bash -l {0}
       run: |
         conda install -c conda-forge mamba pip typer PyYaml pytest pytest-cov codecov coverage rich tomlkit importlib_metadata
         pip install . --no-deps

@@ -1,3 +1,4 @@
+import sys
 import pytest
 from typer.testing import CliRunner
 from ezconda.main import app
@@ -7,6 +8,10 @@ from .helpers import check_if_pkg_is_installed
 runner = CliRunner()
 
 
+@pytest.mark.skipif(
+    sys.platform.startswith("win"),
+    reason="Permission error when installing packages into empty env on windows"
+    )
 @pytest.mark.usefixtures("clean_up_env_after_test")
 def test_install_w_no_existing_pkgs(clean_up_env_after_test):
     _ = runner.invoke(app, ["create", "-n", "test"])

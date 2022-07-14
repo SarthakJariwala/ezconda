@@ -77,16 +77,25 @@ def get_validate_file_name(env_name: str, file: Optional[str] = None) -> Optiona
 def read_env_file(file: str) -> Dict:
     "Read '.yml' file and return a dict containing specifications in the file."
 
-    with open(file, "r") as f:
-        env_specs = yaml.load(f, Loader=yaml.FullLoader)
+    with open(file, "rb") as f:
+        yaml_binary = f.read()
+        try:
+            yaml_stream = yaml_binary.decode("utf-8")
+        except UnicodeDecodeError:
+            yaml_stream = yaml_binary.decode("utf-16")  # NOQA
+        env_specs = yaml.safe_load(yaml_stream)
         return env_specs
 
 
 def write_env_file(env_specs: Dict, file: str) -> None:
     "Writes '.yml' file based on the specifications provided."
 
-    with open(file, "w") as f:
-        yaml.safe_dump(env_specs, f, sort_keys=False)
+    with open(file, "wb") as f:
+        out = yaml.safe_dump(env_specs, sort_keys=False)
+        try:
+            f.write(bytes(out, encoding="utf-8"))
+        except TypeError:  # NOQA
+            f.write(out)
 
 
 def add_pkg_to_dependencies(env_specs: Dict, pkg_name: List[str]) -> Dict:

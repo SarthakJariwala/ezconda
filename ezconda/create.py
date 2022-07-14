@@ -1,3 +1,4 @@
+import os
 import subprocess
 from textwrap import dedent
 import typer
@@ -26,7 +27,7 @@ def create(
         None, "--channel", "-c", help="Additional channel to search for packages"
     ),
     solver: Solver = typer.Option(None, help="Solver to use", case_sensitive=False),
-    file: Optional[Path] = typer.Option(
+    file: Optional[str] = typer.Option(
         None,
         "--file",
         "-f",
@@ -121,9 +122,9 @@ def create(
         if summary:
             get_summary_for_revision(name)
 
-    elif file.is_file():
+    elif Path(file).exists():
         # create from lock file
-        if file.suffix == ".lock":
+        if file.endswith(".lock"):
             name = read_lock_file_and_install(file, solver, verbose, name)
         else:
             # create from yml spec file

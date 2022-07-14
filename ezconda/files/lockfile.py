@@ -1,5 +1,6 @@
 from textwrap import dedent
 import tomlkit
+import os
 import sys
 import json
 import platform
@@ -73,7 +74,7 @@ class LockFile:
 
         console.print(f"[bold green] :lock: Lock file '{lockfile_name}' generated")
 
-    def read_lock_file(self, lock_file: Path) -> TOMLDocument:
+    def read_lock_file(self, lock_file: str) -> TOMLDocument:
 
         with open(lock_file, "r") as f:
             doc = tomlkit.loads(f.read())
@@ -127,7 +128,7 @@ class LockFile:
 
 
 def read_lock_file_and_install(
-    lock_file: Path,
+    lock_file: str,
     solver: Solver,
     verbose: bool,
     env_name: Optional[str] = None,
@@ -160,7 +161,8 @@ def read_lock_file_and_install(
             for spec in explicit_specs
         ]
 
-        with tempfile.NamedTemporaryFile() as f:
+        with tempfile.NamedTemporaryFile(delete=False) as f:
+            temp_file_name = f.name
             f.write(bytes("@EXPLICIT\n", "utf-8"))
             f.writelines([bytes(specs + "\n", "utf-8") for specs in explicit_specs])
             f.flush()
@@ -178,6 +180,11 @@ def read_lock_file_and_install(
             ]
 
             result = run_command(cmd, verbose=verbose)
+
+        # delete the file only here - issue with windows when delete=True in NamedTemporaryFile
+        # Windows does not allow processes other than the one used to create 
+        # the NamedTemporaryFile to access the file when using delete=True (the default).
+        os.unlink(temp_file_name)
 
         # TODO: Add installation for pypi channels/packages
 
