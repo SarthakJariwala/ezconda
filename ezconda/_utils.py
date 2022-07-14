@@ -82,7 +82,7 @@ def read_env_file(file: str) -> Dict:
         try:
             yaml_stream = yaml_binary.decode("utf-8")
         except UnicodeDecodeError:
-            yaml_stream = yaml_binary.decode("utf-16", errors="ignore")
+            yaml_stream = yaml_binary.decode("utf-16")  # NOQA
         env_specs = yaml.safe_load(yaml_stream)
         return env_specs
 
@@ -94,7 +94,7 @@ def write_env_file(env_specs: Dict, file: str) -> None:
         out = yaml.safe_dump(env_specs, sort_keys=False)
         try:
             f.write(bytes(out, encoding="utf-8"))
-        except TypeError:
+        except TypeError:  # NOQA
             f.write(out)
 
 
