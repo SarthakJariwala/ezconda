@@ -1,3 +1,4 @@
+from __future__ import annotations
 import json
 import re
 import subprocess
@@ -98,6 +99,42 @@ def write_env_file(env_specs: Dict, file: str) -> None:
             f.write(out)
 
 
+def check_if_pkg_already_exists(
+    pkg_name: List[str],
+    conda_dependencies: List[str],
+    pip_dependencies: List[str] | None = None,
+    ) -> None:
+    """Check if the package/s specified already exist in 'dependencies' section
+    in 'yml' file (also known as specfile).
+    If package/s already exists, informs user and exits the program.
+    """
+    # create a list of existing packages without >,<,=
+    conda_dependencies_re = [re.findall(r"\w+", d)[0] for d in conda_dependencies]
+
+    if pip_dependencies:
+        pip_packages_re = [re.findall(r"\w+", d)[0] for d in pip_dependencies]
+
+    for pkg in pkg_name:
+        # strip any >,<,= from the package name that the user provided
+        pkg_re = re.findall(r"\w+", pkg)[0]
+
+        # exit if package already exists in the env.yml file
+        if pkg_re in conda_dependencies_re:
+            console.print(
+                f"[yellow]'{pkg_re}' already exists. Skipping installation.\n"
+                f"[yellow]If you want to update {pkg_re}, use `update` instead."
+            )
+            raise typer.Exit()
+
+        if pip_dependencies:
+            if pkg_re in pip_packages_re:
+                console.print(
+                    f"[yellow]'{pkg_re}' already exists. Skipping installation.\n"
+                    f"[yellow]If you want to update {pkg_re}, use `update` instead."
+                )
+                raise typer.Exit()
+
+
 def add_pkg_to_dependencies(env_specs: Dict, pkg_name: List[str]) -> Dict:
     """
     Checks if the package/s specified already exist in 'dependencies' section in 'yml' file.
@@ -109,24 +146,51 @@ def add_pkg_to_dependencies(env_specs: Dict, pkg_name: List[str]) -> Dict:
 
     # check if packages already exists
     if existing_packages:
-        # create a list of existing packages without >,<,=
-        existing_packages_re = [re.findall(r"\w+", d)[0] for d in existing_packages]
+        # pip dependencies are always added to the 'dependencies' section at last, if they exist
+        if type(existing_packages[-1]) == dict:
+            pip_dependencies = existing_packages[-1]["pip"]
+            conda_dependencies = existing_packages[:-1]
+        else:
+            pip_dependencies = []
+            conda_dependencies = existing_packages
 
-        for pkg in pkg_name:
-            # strip any >,<,= from the package name that the user provided
-            pkg_re = re.findall(r"\w+", pkg)[0]
+        check_if_pkg_already_exists(pkg_name, conda_dependencies, pip_dependencies)
 
-            # exit if package already exists in the env.yml file
-            if pkg_re in existing_packages_re:
-                console.print(
-                    f"[yellow]'{pkg_re}' already exists. Skipping installation.\n"
-                    f"[yellow]If you want to update {pkg_re}, use `update` instead."
-                )
-                raise typer.Exit()
-
-        env_specs["dependencies"] = existing_packages + list(pkg_name)
+        if pip_dependencies:
+            env_specs["dependencies"] = conda_dependencies + list(pkg_name) + [{"pip": pip_dependencies}]
+        else:
+            env_specs["dependencies"] = conda_dependencies + list(pkg_name)
     else:
         env_specs["dependencies"] = list(pkg_name)
+    return env_specs
+
+
+def add_pkg_to_pip_dependencies(env_specs: Dict, pkg_name: List[str]) -> Dict:
+    """
+    Checks if the package/s specified already exist in 'dependencies' section in 'yml' file.
+    If package/s already exists, informs user and exits the program.
+    If package/s does not exist, adds it to 'dependencies' section in 'yml' file.
+    """
+
+    existing_packages = env_specs.get("dependencies")
+
+    if existing_packages:
+        # pip dependencies are always added to the 'dependencies' section at last, if they exist
+        if type(existing_packages[-1]) == dict:
+            pip_dependencies = existing_packages[-1]["pip"]
+            conda_dependencies = existing_packages[:-1]
+        else:
+            pip_dependencies = []
+            conda_dependencies = existing_packages
+
+        check_if_pkg_already_exists(pkg_name, conda_dependencies, pip_dependencies)
+
+        env_specs["dependencies"] = conda_dependencies + [{"pip": pip_dependencies + list(pkg_name)}]
+
+    else:
+        console.print("[red]No python installed!\nInstall python using conda before using `pip` channel.[/]")
+        raise typer.Exit()
+        # env_specs["dependencies"] = ["python", "pip"] + [{"pip": list(pkg_name)}]
     return env_specs
 
 

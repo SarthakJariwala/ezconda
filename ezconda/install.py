@@ -1,13 +1,12 @@
-import subprocess
 import typer
 from typing import List, Optional
-from pathlib import Path
 
 from .console import console
 from ._utils import (
     get_validate_file_name,
     read_env_file,
     add_pkg_to_dependencies,
+    add_pkg_to_pip_dependencies,
     write_env_file,
     add_new_channel_to_env_specs,
     run_command,
@@ -53,27 +52,32 @@ def install(
         file = get_validate_file_name(env_name, file)
 
         env_specs = read_env_file(file)
-        env_specs = add_pkg_to_dependencies(env_specs, pkg_name)
-        env_specs = add_new_channel_to_env_specs(env_specs, channel)
-
-        if solver is None:
-            solver = get_default_solver()
-
-        status.update(f"[magenta]Resolving & Installing packages using {solver.value}")
-
-        if not channel:
-            cmd = [f"{solver.value}", "install", "-n", env_name, *pkg_name, "-y"]
+        if channel == "pip":
+            status.update(f"[magenta]Using pip for installation")
+            env_specs = add_pkg_to_pip_dependencies(env_specs, pkg_name)
+            cmd = ["conda", "run", "-n", env_name, "python", "-m", "pip", "install", *pkg_name]
         else:
-            cmd = [
-                f"{solver.value}",
-                "install",
-                "-n",
-                env_name,
-                "--channel",
-                channel,
-                *pkg_name,
-                "-y",
-            ]
+            env_specs = add_pkg_to_dependencies(env_specs, pkg_name)
+            env_specs = add_new_channel_to_env_specs(env_specs, channel)
+
+            if solver is None:
+                solver = get_default_solver()
+
+            status.update(f"[magenta]Resolving & Installing packages using {solver.value}")
+
+            if not channel:
+                cmd = [f"{solver.value}", "install", "-n", env_name, *pkg_name, "-y"]
+            else:
+                cmd = [
+                    f"{solver.value}",
+                    "install",
+                    "-n",
+                    env_name,
+                    "--channel",
+                    channel,
+                    *pkg_name,
+                    "-y",
+                ]
 
         run_command(cmd, verbose=verbose)
 
@@ -91,5 +95,5 @@ def install(
 
         console.print(f"[bold green] :star: Done!")
 
-        if summary:
+        if summary and channel != "pip":
             get_summary_for_revision(env_name)
